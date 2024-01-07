@@ -9,7 +9,7 @@ export default function Home() {
         <div className="gap-5 flex max-md:flex-col max-md:items-stretch max-md:gap-0">
           <div className="flex flex-col items-stretch w-[63%] max-md:w-full max-md:ml-0">
             <div className="flex flex-col my-auto items-start max-md:max-w-full max-md:mt-10">
-              <div className="self-stretch text-blue-400 text-6xl font-semibold leading-[76px] max-md:max-w-full max-md:text-4xl max-md:leading-[52px]">
+              <div className="self-stretch text-black text-6xl font-semibold leading-[76px] max-md:max-w-full max-md:text-4xl max-md:leading-[52px]">
                 Wo Ordnung auf{" "}
                 <span className="text-blue-400">Intelligenz trifft</span>
               </div>
