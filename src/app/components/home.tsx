@@ -49,7 +49,7 @@ export default function Home() {
                 alt="Image"
                 loading="lazy"
                 src="/brain.svg"
-                className="aspect-[1.16] object-contain object-center w-[65px] overflow-hidden max-w-full"
+                className="aspect-[1.16] object-contain object-center w-[87px] overflow-hidden max-w-full"
                 width={87} height={75}
               />
               <div className="self-stretch text-neutral-600 text-center text-3xl font-bold leading-9 mt-4">
@@ -88,10 +88,10 @@ export default function Home() {
                     alt="Image"
                     loading="lazy"
                     src="/datei.svg"
-                    className="aspect-[1.16] object-contain object-center w-[65px] overflow-hidden max-w-full"
+                    className="aspect-[1.16] object-contain object-center w-[87px] overflow-hidden max-w-full"
                     width={87} height={75}
                 />
-                <div className="text-neutral-600 text-center text-3xl font-bold leading-9 self-stretch mt-4">
+                <div className="text-neutral-600 text-center text-2xl sm:text-3xl font-bold leading-9 self-stretch mt-4">
                   Sicherheitspriorisierung
                 </div>
               </div>
