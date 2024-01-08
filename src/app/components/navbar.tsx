@@ -1,5 +1,6 @@
 
 import Image from "next/image";
+import Link from "next/link";
 
 export default function NavBar() {
   return (
@@ -16,13 +17,9 @@ export default function NavBar() {
           <div className="text-zinc-900 text-base font-medium leading-6 grow whitespace-nowrap">
             Home
           </div>
-          <div className="text-zinc-900 text-base leading-6">Service</div>
-          <div className="text-zinc-900 text-base leading-6">Feature</div>
-          <div className="text-zinc-900 text-base leading-6">Product</div>
-          <div className="text-zinc-900 text-base leading-6">Testimonial</div>
-          <div className="text-zinc-900 text-base leading-6 whitespace-nowrap">
-            FAQ
-          </div>
+          <Link href="#feature" className="text-zinc-900 text-base leading-6">Feature</Link>
+          <Link href="#product" className="text-zinc-900 text-base leading-6">Produkt</Link>
+          
         </div>
         <div className="items-stretch self-center flex sm:hidden lg:flex gap-3.5 my-auto ">
           <div className="text-blue-400 text-center text-sm font-medium leading-5 whitespace-nowrap items-stretch bg-slate-100 grow justify-center px-5 py-2.5 rounded-md">

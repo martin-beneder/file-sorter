@@ -3,7 +3,7 @@ import Image from "next/image"
 
 export default function Home() {
     return(
-    <div className="items-start flex flex-col">
+    <div className="items-start flex flex-col" >
     <div className="items-center self-stretch bg-slate-100 flex w-full flex-col justify-center px-16 py-12 max-md:max-w-full max-md:px-5">
       <div className="w-full max-w-6xl my-12 max-md:max-w-full max-md:my-10">
         <div className="gap-5 flex max-md:flex-col max-md:items-stretch max-md:gap-0">
@@ -34,7 +34,7 @@ export default function Home() {
         </div>
       </div>
     </div>
-    <div className="text-neutral-600 text-center text-4xl font-semibold leading-10 self-center max-w-[542px] mt-10 max-md:max-w-full">
+    <div id="feature" className="text-neutral-600 text-center text-4xl font-semibold leading-10 self-center max-w-[542px] mt-10 max-md:max-w-full">
       Revolutioniert Ihr Datenmanagement mit einem Klick
     </div>
     <div className="self-stretch text-neutral-500 text-center text-base leading-6 w-full mt-2 max-md:max-w-full">

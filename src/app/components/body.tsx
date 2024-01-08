@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function Body() {
     return(
     <>
-       <header className="justify-center items-stretch flex flex-col py-12">
+       <header className="justify-center items-stretch flex flex-col py-12" >
         <div className="justify-center items-center flex w-full flex-col mt-32 px-16 max-md:max-w-full max-md:mt-10 max-md:px-5">
           <div className="w-full max-w-6xl max-md:max-w-full">
             <div className="gap-5 flex max-md:flex-col max-md:items-stretch max-md:gap-0">
