@@ -22,12 +22,12 @@ export default function NavBar() {
           
         </div>
         <div className="items-stretch self-center flex  lg:flex gap-3.5 my-auto ">
-          <div className="text-blue-400 text-center text-sm font-medium leading-5 whitespace-nowrap items-stretch bg-slate-100 grow justify-center px-5 py-2.5 rounded-md">
+          <Link href="/login" className="text-blue-400 text-center text-sm font-medium leading-5 whitespace-nowrap items-stretch bg-slate-100 grow justify-center px-5 py-2.5 rounded-md">
             Login
-          </div>
-          <div className="text-white text-center text-sm font-medium leading-5 whitespace-nowrap items-stretch bg-blue-400 grow justify-center px-5 py-2.5 rounded-md">
+          </Link>
+          <Link href="/signup" className="text-white text-center text-sm font-medium leading-5 whitespace-nowrap items-stretch bg-blue-400 grow justify-center px-5 py-2.5 rounded-md">
             Sign up
-          </div>
+          </Link>
         </div>
       </div>
     </div>
