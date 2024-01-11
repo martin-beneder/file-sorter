@@ -10,15 +10,7 @@ export default async function Home() {
   const authRequest = auth.handleRequest("GET", context);
   const session = (await authRequest.validate()) ?? null;
   if (!session) redirect("/login");
-
-    console.log(session?.user?.userId);
-    const user = await prisma.user.findUnique({
-      where: {
-        id: session?.user?.userId,
-      },
-    });
-
-    console.log(user?.email);
+  
   return (
     <main className="min-h-screen py-2 max-w-5xl mx-auto">
       {session && (

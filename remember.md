@@ -1,0 +1,1 @@
+https://lucia-auth.com/guidebook/email-verification-links/nextjs-app/

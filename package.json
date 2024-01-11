@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@lucia-auth/adapter-prisma": "^3.0.2",
-    "@prisma/client": "^5.7.1",
+    "@prisma/client": "^5.8.0",
     "lucia": "^2.7.6",
     "next": "14.0.4",
     "prisma": "^5.7.1",

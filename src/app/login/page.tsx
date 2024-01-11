@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import NavBar from "../components/navbar";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -31,7 +32,9 @@ const LoginPage = () => {
   };
 
   return (
+
     <div className="h-screen">
+      <NavBar />
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-md shadow-md max-w-lg mx-auto mt-40"

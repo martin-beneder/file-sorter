@@ -9,29 +9,40 @@ datasource db {
 }
 
 model User {
-  id           String    @id @unique
-  email        String    @unique
-  name         String?
-  role         String? // Add this line
-  auth_session Session[]
-  key          Key[]
+  id             String                   @id @default(uuid()) @db.Uuid
+  email          String                   @unique
+  emailVerified  Int
+  userKeys       UserKey[]
+  userSessions   UserSession[]
+  emailVerTokens EmailVerificationToken[]
+  passwordResets PasswordResetToken[]
 }
 
-model Session {
-  id             String @id @unique
-  user_id        String
-  active_expires BigInt
-  idle_expires   BigInt
-  user           User   @relation(references: [id], fields: [user_id], onDelete: Cascade)
-
-  @@index([user_id])
+model UserKey {
+  id             String  @id @default(uuid()) @db.Uuid
+  userId         String  @db.Uuid
+  hashedPassword String? @db.VarChar(255)
+  user           User    @relation(fields: [userId], references: [id])
 }
 
-model Key {
-  id              String  @id @unique
-  hashed_password String?
-  user_id         String
-  user            User    @relation(references: [id], fields: [user_id], onDelete: Cascade)
+model UserSession {
+  id            String @id @default(uuid()) @db.Uuid
+  userId        String @db.Uuid
+  activeExpires BigInt
+  idleExpires   BigInt
+  user          User   @relation(fields: [userId], references: [id])
+}
 
-  @@index([user_id])
+model EmailVerificationToken {
+  id      String @id @default(uuid()) @db.Uuid
+  userId  String @db.Uuid
+  expires BigInt
+  user    User   @relation(fields: [userId], references: [id])
+}
+
+model PasswordResetToken {
+  id      String @id @default(uuid()) @db.Uuid
+  userId  String @db.Uuid
+  expires BigInt
+  user    User   @relation(fields: [userId], references: [id])
 }
