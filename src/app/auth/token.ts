@@ -6,9 +6,9 @@ const EXPIRES_IN = 1000 * 60 * 60 * 2; // 2 hours
 const db = new PrismaClient();
 
 export const generateEmailVerificationToken = async (userId: string) => {
-	const storedUserTokens = await db.email_verification_token.findMany({
+	const storedUserTokens = await db.emailVerificationToken.findMany({
 		where: {
-			user_id: userId
+			userId: userId
 		}
 	});
 	if (storedUserTokens.length > 0) {
@@ -20,14 +20,37 @@ export const generateEmailVerificationToken = async (userId: string) => {
 		if (reusableStoredToken) return reusableStoredToken.id;
 	}
 	const token = generateRandomString(63);
-	await db.email_verification_token.create({
+	await db.emailVerificationToken.create({
 		data: {
-			id: userId,
-			token: token,
+			id: token,
 			expires: new Date().getTime() + EXPIRES_IN,
-			user_id: userId
+			userId: userId
 		}
 	});
 
 	return token;
+};
+
+
+export const validateEmailVerificationToken = async (token: string) => {
+
+	const storedToken = await db.emailVerificationToken.findFirst({
+		where: {
+			id: token
+		}
+	});
+	if (!storedToken) throw new Error("Invalid token");
+
+	await db.emailVerificationToken.deleteMany({
+		where: {
+			userId: storedToken.userId
+		}
+	});
+
+
+	const tokenExpires = Number(storedToken.expires); // bigint => number conversion
+	if (!isWithinExpiration(tokenExpires)) {
+		throw new Error("Expired token");
+	}
+	return storedToken.userId;
 };

@@ -5,6 +5,8 @@ import { generateEmailVerificationToken } from "@/app/auth/token";
 import { sendEmailVerificationLink } from "@/app/auth/email";
 
 import type { NextRequest } from "next/server";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+
 
 const isValidEmail = (maybeEmail: unknown): maybeEmail is string => {
 	if (typeof maybeEmail !== "string") return false;
@@ -51,7 +53,7 @@ export const POST = async (request: NextRequest) => {
 			},
 			attributes: {
 				email: email.toLowerCase(),
-				email_verified: false // `Number(true)` if stored as an integer
+				emailVerified: Number(false), // `Number(true)` if stored as an integer
 			}
 		});
 		const session = await auth.createSession({
@@ -73,9 +75,9 @@ export const POST = async (request: NextRequest) => {
 	} catch (e) {
 		// this part depends on the database you're using
 		// check for unique constraint error in user table
+		console.log(e);
 		if (
-			e instanceof SomeDatabaseError &&
-			e.message === USER_TABLE_UNIQUE_CONSTRAINT_ERROR
+			e instanceof PrismaClientKnownRequestError && e.code === 'P2002'
 		) {
 			return NextResponse.json(
 				{

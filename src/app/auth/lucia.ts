@@ -13,9 +13,9 @@ export const auth = lucia({
   },
   adapter: prismaAdapter(prismaClient, {
     user: "user", // model User {}
-    key: "key", // model Key {}
-    session: "session" // model Session {}
-})
+    key: "userKey", // model UserKey {}
+    session: "userSession", // model UserSession {}
+  })
 });
 
 export type Auth = typeof auth;
