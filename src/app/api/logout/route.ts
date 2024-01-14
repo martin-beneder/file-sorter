@@ -1,6 +1,6 @@
 import { auth } from "@/app/auth/lucia";
 import * as context from "next/headers";
-
+import { revalidatePath } from "next/cache";
 import type { NextRequest } from "next/server";
 
 export const POST = async (request: NextRequest) => {
@@ -16,6 +16,7 @@ export const POST = async (request: NextRequest) => {
   await auth.invalidateSession(session.sessionId);
   // delete session cookie
   authRequest.setSession(null);
+  revalidatePath("/");
   return new Response(null, {
     status: 302,
     headers: {

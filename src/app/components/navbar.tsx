@@ -1,13 +1,18 @@
-"use client"
+
 
 import Image from "next/image";
 import Link from "next/link";
 import LogOutComponent from "./logoutbutton";
-import { useState, useEffect } from "react";
+import * as context from "next/headers";
+import { redirect } from "next/navigation";
+import { auth } from "../auth/lucia";
+import { revalidatePath } from "next/cache";
 
-export default function NavBar() {
-  const [session, setSession] = useState(null);
+export default async function NavBar() {
+  const authRequest = auth.handleRequest("GET", context);
+  const session = await authRequest.validate() as any;
 
+  revalidatePath("/");
 
   return (
     <div className="bg-slate-100 flex flex-col justify-center items-center px-4  lg:px-16 py-3 max-md:px-5">
@@ -30,16 +35,16 @@ export default function NavBar() {
         <div className="items-stretch self-center flex  lg:flex gap-3.5 my-auto ">
           {session ? (
             <>
+              <LogOutComponent />
+            </>
+          ) : (
+            <>
               <Link href="/login" className="text-blue-400 text-center text-sm font-medium leading-5 whitespace-nowrap items-stretch bg-slate-100 grow justify-center px-5 py-2.5 rounded-md">
                 Login
               </Link>
               <Link href="/signup" className="text-white text-center text-sm font-medium leading-5 whitespace-nowrap items-stretch bg-blue-400 grow justify-center px-5 py-2.5 rounded-md">
                 Sign up
               </Link>
-            </>
-          ) : (
-            <>
-              <LogOutComponent />
             </>
           )}
 

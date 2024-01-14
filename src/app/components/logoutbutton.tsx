@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import { render } from "react-dom";
 
 export default function LogOutComponent() {
   const router = useRouter();
@@ -13,11 +14,12 @@ export default function LogOutComponent() {
       },
     });
     router.push("/login");
+    
   };
 
   return (
     <div>
-      <button onClick={handleLogout}>Log Out</button>
+      <button className="text-white text-center text-sm font-medium leading-5 whitespace-nowrap items-stretch bg-blue-400 grow justify-center px-5 py-2.5 rounded-md" onClick={handleLogout}>Log Out</button>
     </div>
   );
 }

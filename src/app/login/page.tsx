@@ -7,6 +7,7 @@ import Link from "next/link";
 const Page = async () => {
   const authRequest = auth.handleRequest("GET", context);
   const session = await authRequest.validate();
+  
   if (session) {
     if (!session.user.emailVerified) redirect("/email-verification");
     redirect("/");

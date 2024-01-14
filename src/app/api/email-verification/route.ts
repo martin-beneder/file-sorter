@@ -12,6 +12,7 @@ export const POST = async (request: NextRequest) => {
             status: 401
         });
     }
+    console.log(session?.user?.emailVerified);
     if (session.user.emailVerified) {
         return new Response(
             JSON.stringify({

@@ -19,7 +19,7 @@ export const GET = async (
 		const user = await auth.getUser(userId);
 		await auth.invalidateAllUserSessions(user.userId);
 		await auth.updateUserAttributes(user.userId, {
-			email_verified: true // `Number(true)` if stored as an integer
+			email_verified: true
 		});
 		const session = await auth.createSession({
 			userId: user.userId,

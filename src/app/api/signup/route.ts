@@ -48,12 +48,12 @@ export const POST = async (request: NextRequest) => {
 		const user = await auth.createUser({
 			key: {
 				providerId: "email", // auth method
-				providerUserId: email.toLowerCase(), // unique id when using "email" auth method
+				providerUserId: email.toLowerCase() as string, // unique id when using "email" auth method
 				password // hashed by Lucia
 			},
 			attributes: {
-				email: email.toLowerCase(),
-				emailVerified: false, // `Number(true)` if stored as an integer
+				email: email.toLowerCase() as string,
+				email_verified: false as boolean, // `Number(true)` if stored as an integer
 			}
 		});
 		console.log(user);
