@@ -53,19 +53,21 @@ export const POST = async (request: NextRequest) => {
 			},
 			attributes: {
 				email: email.toLowerCase(),
-				emailVerified: Number(false), // `Number(true)` if stored as an integer
+				emailVerified: false, // `Number(true)` if stored as an integer
 			}
 		});
+		console.log(user);
 		const session = await auth.createSession({
 			userId: user.userId,
 			attributes: {}
 		});
+		console.log(session);
 		const authRequest = auth.handleRequest(request.method, context);
 		authRequest.setSession(session);
 
 		const token = await generateEmailVerificationToken(user.userId);
 		await sendEmailVerificationLink(token);
-
+		console.log(token);
 		return new Response(null, {
 			status: 302,
 			headers: {
