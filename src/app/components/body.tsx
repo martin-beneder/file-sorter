@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { FaArrowRight } from "react-icons/fa";
 
 export default function Body() {
     return(
@@ -83,6 +84,20 @@ export default function Body() {
           </div>
         </div>
       </section>
+      <header id="product" className="items-center bg-slate-100 flex w-full flex-col justify-center px-16 py-8 max-md:max-w-full max-md:px-5">
+        <div className="flex w-[887px] max-w-full flex-col items-stretch">
+          <h1 className="text-gray-800 text-center text-6xl font-semibold leading-[76px] max-md:max-w-full max-md:text-4xl max-md:leading-[52px]">
+            Mit SortAI jetzt zur klaren Ordnung – sicher, schnell und smart!
+          </h1>
+          <div className="justify-center items-stretch rounded bg-blue-400 self-center flex gap-2 mt-8 px-8 py-3.5 max-md:px-5">
+            <a href="#" className="text-white text-center text-base font-medium leading-6 grow whitespace-nowrap">
+              Teste Jetzt
+            </a>
+            
+            <FaArrowRight className=" text-white aspect-square object-contain object-center w-4 justify-center items-center overflow-hidden self-center shrink-0 max-w-full my-auto" />
+          </div>
+        </div>
+      </header>
     </>
   );
 }

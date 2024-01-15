@@ -7,6 +7,7 @@ const Form = (props: {
 	children: React.ReactNode;
 	action: string;
 	successMessage?: string;
+	className?: string;
 }) => {
 	const router = useRouter();
 	const [errorMessage, setErrorMessage] = useState<null | string>(null);
@@ -15,6 +16,7 @@ const Form = (props: {
 		<>
 			<form
 				action={props.action}
+				className={props.className}
 				method="post"
 				onSubmit={async (e) => {
 					e.preventDefault();
