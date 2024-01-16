@@ -23,6 +23,15 @@ const Form = (props: {
 					setErrorMessage(null);
 					setSuccessMessage(null);
 					const formData = new FormData(e.currentTarget);
+					if(props.action !== "/api/email-verification"){
+						const body = Object.fromEntries(formData.entries());
+						if(!body.email) return setErrorMessage("Bitte geben Sie eine Email-Adresse ein");
+						if(body?.passwortconfirm){
+
+							if(!body.password && !body.passwordconfirmation) return setErrorMessage("Bitte geben Sie ein Passwort ein");
+							if(body.password !== body.passwordconfirmation) return setErrorMessage("Passwörter stimmen nicht überein");
+						}
+						}
 					const response = await fetch(props.action, {
 						method: "POST",
 						body: formData,

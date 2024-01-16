@@ -30,13 +30,9 @@ const Page = async () => {
                 width={218}
                 height={60}
               />
-
-
               <h1 className="text-black text-xl font-bold self-center whitespace-nowrap mt-7">
                 Login into your account
               </h1>
-
-
               <Form action="/api/login">
               <label htmlFor="email" className="text-neutral-600 text-base self-stretch mt-14 max-md:mt-10">
                 Email Address
@@ -52,9 +48,6 @@ const Page = async () => {
                   height={50}
                 />
               </div>
-
-
-
               <label htmlFor="password" className="text-neutral-600 text-base self-stretch mt-7">
                 Password
               </label>
@@ -69,9 +62,6 @@ const Page = async () => {
                   height={50}
                 />
                 </div>
-
-
-
               <Link href="#" passHref>
                 <div className="text-indigo-900 text-sm underline whitespace-nowrap mt-4 self-end">
                   Forgot Password?
@@ -92,9 +82,7 @@ const Page = async () => {
               <div className="bg-stone-300 self-center w-[175px] shrink-0 h-px my-auto" />
             </div>
             <Link className="text-blue-400  sm:mr-5 m-3 sm:m-0 text-center text-base font-semibold whitespace-nowrap border border-blue-400 shadow-md self-center w-96 max-w-full justify-center items-center mt-7 mb-28 px-12 sm:px-16 py-4 rounded-lg border-solid max-md:mb-10 max-md:px-5" href="#" passHref>
-              
                 Signup Now
-              
             </Link>
           </div>
         </div>
