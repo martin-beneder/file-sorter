@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import LogOutComponent from "./logoutbutton";
 import * as context from "next/headers";
-import { redirect } from "next/navigation";
 import { auth } from "../auth/lucia";
 import { revalidatePath } from "next/cache";
 
@@ -16,7 +15,7 @@ export default async function NavBar() {
 
   return (
     <div className="bg-slate-100 flex flex-col justify-center items-center px-4  lg:px-16 py-3 max-md:px-5">
-      <div className="flex w-full max-w-[1197px] items-stretch justify-between gap-5 max-md:max-w-full ">
+      <div className="flex w-full max-w-[1197px] items-stretch justify-between gap-0 sm:gap-5 max-md:max-w-full ">
         <Image
           loading="lazy"
           alt="Logo"

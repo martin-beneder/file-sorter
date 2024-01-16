@@ -86,12 +86,12 @@ const Page = async () => {
             </Form>
             </header>
             
-            <div className="self-center flex w-[410px] max-w-full items-stretch justify-between gap-5 mt-9 px-5">
+            <div className="self-center flex w-auto max-w-full items-stretch justify-between  mt-9 px-2 sm:px-5">
               <div className="bg-stone-300 self-center w-[175px] shrink-0 h-px my-auto" />
               <div className="text-stone-300 text-sm">OR</div>
               <div className="bg-stone-300 self-center w-[175px] shrink-0 h-px my-auto" />
             </div>
-            <Link className="text-blue-400 mr-5 text-center text-base font-semibold whitespace-nowrap border border-blue-400 shadow-md self-center w-[410px] max-w-full justify-center items-center mt-7 mb-28 px-16 py-4 rounded-lg border-solid max-md:mb-10 max-md:px-5" href="#" passHref>
+            <Link className="text-blue-400  sm:mr-5 m-3 sm:m-0 text-center text-base font-semibold whitespace-nowrap border border-blue-400 shadow-md self-center w-96 max-w-full justify-center items-center mt-7 mb-28 px-12 sm:px-16 py-4 rounded-lg border-solid max-md:mb-10 max-md:px-5" href="#" passHref>
               
                 Signup Now
               
