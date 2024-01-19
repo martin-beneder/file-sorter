@@ -13,8 +13,10 @@ export default function LogOutComponent() {
         "Content-Type": "application/json",
       },
     });
+    window.location.reload();
+
     router.push("/login");
-    
+
   };
 
   return (

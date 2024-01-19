@@ -25,7 +25,7 @@ export const POST = async (request: NextRequest) => {
     }
     try {
         const token = await generateEmailVerificationToken(session.user.userId);
-        await sendEmailVerificationLink(token);
+        await sendEmailVerificationLink(token, session.user.email);
         return new Response();
     } catch {
         return new Response(

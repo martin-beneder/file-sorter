@@ -66,7 +66,7 @@ export const POST = async (request: NextRequest) => {
 		authRequest.setSession(session);
 
 		const token = await generateEmailVerificationToken(user.userId);
-		await sendEmailVerificationLink(token);
+		await sendEmailVerificationLink(token, email);
 		console.log(token);
 		return new Response(null, {
 			status: 302,
