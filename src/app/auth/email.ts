@@ -16,7 +16,7 @@ async function sendEmail(recipient: string, subject: string, body: string, url: 
 
     // Setup email data
     let mailOptions = {
-        from: '"Sender Name" business@digitalhorizon-solution.at', // sender address
+        from: '"SortAI" business@digitalhorizon-solution.at', // sender address
         to: recipient, // list of receivers
         subject: subject, // Subject line
         text: body, // plain text body
