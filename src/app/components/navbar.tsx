@@ -2,16 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import LogOutComponent from "./logoutbutton";
-import * as context from "next/headers";
-import { auth } from "../auth/lucia";
-import { revalidatePath } from "next/cache";
+import { UserButton } from "@clerk/nextjs";
+import { currentUser } from '@clerk/nextjs';
 
 export default async function NavBar() {
-  const authRequest = auth.handleRequest("GET", context);
-  const session = await authRequest.validate() as any;
-
-  revalidatePath("/");
+  const user = await currentUser();
+  const session = user !== null;
+  
+  
 
   return (
     <div className="bg-slate-100 flex flex-col justify-center items-center px-4  lg:px-16 py-3 max-md:px-5">
@@ -34,7 +32,7 @@ export default async function NavBar() {
         <div className="items-stretch self-center flex  lg:flex gap-3.5 my-auto ">
           {session ? (
             <>
-              <LogOutComponent />
+              <UserButton afterSignOutUrl="/" /> 
             </>
           ) : (
             <>

@@ -4,6 +4,7 @@ import './globals.css'
 import Footer from '@/app/components/footer'
 import NavBar from '@/app/components/navbar'
 import { revalidatePath } from 'next/cache'
+import { ClerkProvider } from '@clerk/nextjs'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,6 +20,7 @@ export default function RootLayout({
 }) {
 
   return (
+    <ClerkProvider>
     <html lang="de">
       <body className={inter.className}>
         <NavBar />
@@ -26,5 +28,6 @@ export default function RootLayout({
         <Footer />
       </body>
     </html>
+    </ClerkProvider>
   )
 }
