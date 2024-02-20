@@ -8,6 +8,8 @@ import { currentUser } from '@clerk/nextjs';
 export default async function NavBar() {
   const user = await currentUser();
   const session = user !== null;
+  const username = session ? user.emailAddresses[0].emailAddress: null;
+  console.log(username);
   
   
 
@@ -32,7 +34,7 @@ export default async function NavBar() {
         <div className="items-stretch self-center flex  lg:flex gap-3.5 my-auto ">
           {session ? (
             <>
-              <UserButton afterSignOutUrl="/" /> 
+              <UserButton afterSignOutUrl="/" /> <span className="text-black" >{username}</span>
             </>
           ) : (
             <>
