@@ -12,7 +12,7 @@ import { useDropzone, type DropzoneOptions } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
 
 const variants = {
-  base: 'relative rounded-md p-40 m-24 max-w-[calc(100vw-1rem)] flex justify-center items-center flex-col cursor-pointer border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out',
+  base: 'relative rounded-md p-10 m-24 max-w-[calc(100vw-1rem)] flex justify-center items-center flex-col cursor-pointer border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out',
   active: 'border-2',
   disabled:
     'bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700 dark:border-gray-600',
@@ -60,6 +60,9 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
       disabled = disabled ?? value.length >= dropzoneOptions.maxFiles;
     }
     // dropzone configuration
+
+    
+
     const {
       getRootProps,
       getInputProps,
@@ -80,6 +83,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
           return;
         }
         if (files) {
+          
           const addedFiles = files.map<FileState>((file) => ({
             file,
             key: Math.random().toString(36).slice(2),
@@ -132,7 +136,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col ">
           <div>
             {/* Main File Input */}
             <div
@@ -140,39 +144,35 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                 className: dropZoneClassName,
               })}
             >
-              <input ref={ref} {...getInputProps()} />
-              <div className="flex flex-col items-center justify-center text-xs text-gray-400">
-                <UploadCloudIcon className="mb-1 h-7 w-7" />
+              
+              
+              <input  ref={ref} {...getInputProps()} />
+              {value?.length ? null : 
+                <div className="flex flex-col items-center justify-center z-0 text-xs text-gray-400">
+                <UploadCloudIcon className="mb-1 h-14 w-14" />
                 <div className="text-gray-400">
                   drag & drop oder Klick um hoch zu laden
                 </div>
-              </div>
-            </div>
-
-            {/* Error Text */}
-            <div className="mt-1 text-xs text-red-500">
-              {customError ?? errorMessage}
-            </div>
-          </div>
-
-          {/* Selected Files */}
+                </div>}
+              
+                {/* Selected Files */}
+                <div className='z-50 text-left items-start align-top ' >
           {value?.map(({ file, progress }, i) => (
             <div
               key={i}
-              className="flex h-16 w-96 max-w-[100vw] flex-col justify-center rounded border border-gray-300 px-4 py-2"
+              className="flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2"
             >
-              <div className="flex items-center gap-2 text-gray-500 dark:text-white">
-                <FileIcon size="30" className="shrink-0 fill-black" />
-                <div className="min-w-0 text-sm">
-                  <div className="overflow-hidden text-black overflow-ellipsis whitespace-nowrap">
-                    {file.name}
-                  </div>
-                  <div className="text-xs text-gray-400 dark:text-gray-400">
+              <div className="flex items-left gap-2 text-gray-500 dark:text-white">
+               
+                <div className="min-w-0 text-sm flex flex-col items-center mx-auto">
+                <FileIcon size="60" className="shrink-0 fill-black" />
+                <div className="text-xs text-gray-400 dark:text-gray-400">
                     {formatFileSize(file.size)}
                   </div>
-                </div>
-                <div className="grow" />
-                <div className="flex w-12 justify-end text-xs">
+                  <div className="overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap">
+                    {file.name}
+                  </div>
+                 
                   {progress === 'PENDING' ? (
                     <button
                         type="button"
@@ -194,6 +194,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                     <CheckCircleIcon className="shrink-0 text-green-600 dark:text-gray-400" />
                   )}
                 </div>
+                
               </div>
               {/* Progress Bar */}
               {typeof progress === 'number' && (
@@ -210,6 +211,17 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
               )}
             </div>
           ))}
+          </div>
+              
+            </div>
+
+            {/* Error Text */}
+            <div className="mt-1 text-xs text-red-500">
+              {customError ?? errorMessage}
+            </div>
+          </div>
+
+          
         </div>
       </div>
     );
