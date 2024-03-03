@@ -1,17 +1,19 @@
 import { initEdgeStore } from '@edgestore/server';
 import { type CreateContextOptions, createEdgeStoreNextHandler } from '@edgestore/server/adapters/next/app';
-import { getAuth } from "@clerk/nextjs/server";
+import { auth } from '@clerk/nextjs';
+
 
 type Context = {
     userId: string;
 };
  
 async function createContext({ req }: CreateContextOptions): Promise<Context> {
-    const { userId } = await getAuth(req)!; // replace with your own session logic
- 
-    return {
-        userId: userId!,
-    };
+    const {user} = auth();
+    
+    // const userId = session?.userId || null; // Sicherstellen, dass wir null zurückgeben, wenn keine Benutzer-ID vorhanden ist
+
+    console.log('userId', user, user?.username, user?.id);
+    return { "userId": "" };
 }
  
 const es = initEdgeStore.context<Context>().create();
