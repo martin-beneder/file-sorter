@@ -12,7 +12,7 @@ import { useDropzone, type DropzoneOptions } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
 
 const variants = {
-  base: 'relative rounded-md p-10 m-24 max-w-[calc(100vw-1rem)] flex justify-center items-center flex-col cursor-pointer border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out',
+  base: 'relative rounded-md p-10 m-24 max-w-[calc(100vw-1rem)] flex items-start flex-col cursor-pointer border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out',
   active: 'border-2',
   disabled:
     'bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700 dark:border-gray-600',
@@ -144,11 +144,9 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                 className: dropZoneClassName,
               })}
             >
-              
-              
-              <input  ref={ref} {...getInputProps()} />
+              <input className='z-0'  ref={ref} {...getInputProps()} />
               {value?.length ? null : 
-                <div className="flex flex-col items-center justify-center z-0 text-xs text-gray-400">
+                <div className="flex flex-col mx-auto my-10 items-center justify-center z-0 text-xs text-gray-400">
                 <UploadCloudIcon className="mb-1 h-14 w-14" />
                 <div className="text-gray-400">
                   drag & drop oder Klick um hoch zu laden
@@ -156,7 +154,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                 </div>}
               
                 {/* Selected Files */}
-                <div className='z-50 text-left items-start align-top ' >
+                <div className='z-50 text-left items-start align-top grid grid-flow-col gap-2  ' >
           {value?.map(({ file, progress }, i) => (
             <div
               key={i}
@@ -172,6 +170,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                   <div className="overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap">
                     {file.name}
                   </div>
+
                  
                   {progress === 'PENDING' ? (
                     <button
