@@ -1,0 +1,53 @@
+{
+    "Head room.docx": {
+        "filetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "keywords": [
+            "Mikrofonarten",
+            "Aussteuerungsgrenze",
+            "Headroom",
+            "Stecker-Typen",
+            "Recorder",
+            "Boom Mikrofonangel"
+        ],
+        "content": "Head room: 0 zwischen -6dB (eine Art Puffer)\nAussteuerungsgrenze: 0dB ab 0dB Signal clipt\nMikrofonarten: \ndynamisches Mikrofon (Charakteristik: Niere)\nRichtmikrofon (Charakteristik: super Niere)\nLavalier=Ansteckmikrofon \nStecker: XLR, Klinke 3,5mm große 6,35 mm, AUX\nRecorder mit Stereo-Mikrofon mit 2 Kapseln (Eingänge: Line In, XLR und Klinke 6,35mm)\nBoom (Mikrofon Angel)"
+    },
+    "Finanzierung.docx": {
+        "filetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "keywords": [
+            "Drehvorbereitung",
+            "Finanzierung",
+            "Kalkulation",
+            "Teamliste",
+            "Verträge",
+            "Motivliste",
+            "Fördergeber",
+            "Director’s Interpretation",
+            "Moodboard",
+            "Tagesdisposition",
+            "Entnahme",
+            "Auswertung",
+            "Compasen",
+            "NPC",
+            "FFF-Producer",
+            "Drehbuchauszüge",
+            "Schlussdokument"
+        ],
+        "content": "Finanzierung\nFFF-Producer\nSchluss\nDrehbcuhauszüge\nKalkulation\nTeamliste und Verträge\nMotivliste\nVerträge der Fördergeber\nDirector’s Interpretation\n\nUmwegrentabilität\n\nMoodboard:\nStimmung einer szene\n\nDrehvorbereitung\n\nDokument am Ende dieser Phase\nCompasen = NPC\nTagesdispo\nentabnahme\nAuswertung"
+    },
+    "finanzmanage.docx": {
+        "filetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "keywords": [
+            "Businessplan",
+            "Finanzierung",
+            "Team",
+            "Unternehmensgründung",
+            "Planung",
+            "Kapital",
+            "Rechtliche Vorbereitung",
+            "Marketing",
+            "Vertrieb",
+            "Unternehmenserfolg"
+        ],
+        "content": "FRAGE 1: Nennen Sie mindestens 3 Faktoren die für einen erfolgreichen Unternehmensstart maßgeblich sind.\nAntwort:\nGut durchdachter Businessplan: Ein Businessplan hilft dir, deine Ideen zu strukturieren und potenzielle Risiken zu identifizieren.\nFinanzielle Mittel: Ohne genügend Kapital ist es schwer, das Unternehmen am Laufen zu halten, besonders in der Anfangsphase.\nStarkes Team: Ein kompetentes und engagiertes Team kann den Unterschied zwischen Erfolg und Misserfolg ausmachen.\nFRAGE 2: Führen Sie zumindest 3 konkrete Fehler des Jungunternehmers an und begründen Sie Ihre Auswahl kurz und nachvollziehbar.\nAntwort:\nKein Businessplan: Der Jungunternehmer hat keinen Businessplan und unterschätzt dadurch die Bedeutung einer soliden Planung.\nÜberschätzung der eigenen Fähigkeiten: Er denkt, seine Idee würde \"von alleine laufen\" und unterschätzt die Herausforderungen.\nRechtliche Unvorbereitetheit: Er hat keine Rechtsschutzversicherung für sein Geschäft und bekommt Probleme mit Patenten.\nFRAGE: Lesen Sie den Text aufmerksam durch und verfassen Sie anschließend in der Gruppe eine schriftliche Zusammenfassung mit den für Sie am wichtigsten Inhalten.\nAntwort: Der Text betont die Wichtigkeit eines gut durchdachten Businessplans für den Erfolg eines Unternehmens. Er zeigt die verschiedenen Phasen und Herausforderungen auf, die ein Jungunternehmer durchläuft, und hebt hervor, wie ein Mangel an Planung und Vorbereitung zum Scheitern führen kann. Besonders wichtig sind finanzielle Planung, Teamzusammenstellung und rechtliche Vorbereitung. Der Text gibt auch Tipps für Marketing und Vertrieb und betont, dass ein starkes Team und ein guter Businessplan entscheidend für den Erfolg sind.\n"
+    }
+}
