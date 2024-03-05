@@ -15,10 +15,10 @@ export function MultiFileDropzoneUsage() {
   const [fileStates, setFileStates] = useState<FileState[]>([]);
   const { edgestore } = useEdgeStore();
   const [isVisible, setIsVisible] = useState(false);
-  
+
   interface FileUpload {
     name: string;
-    result: unknown; 
+    result: unknown;
   }
 
   const [filesUploaded, setFilesUploaded] = useState<FileUpload[]>([]);
@@ -37,7 +37,20 @@ export function MultiFileDropzoneUsage() {
         body: JSON.stringify(filesUploaded),
       });
       const data = await response.json();
+      console.log("data:", data);
+
+      const sortdata = await fetch('/api/sortdata', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(response.text()),
+      });
+
+      console.log("sortdata:", sortdata);
+
       setData(data);
+
     } catch (error) {
       console.error('Error fetching data:', error);
       setData(null);
@@ -47,7 +60,7 @@ export function MultiFileDropzoneUsage() {
     }
   };
 
-  
+
 
   function updateFileProgress(key: string, progress: FileState['progress']) {
     setFileStates((fileStates) => {
@@ -61,7 +74,7 @@ export function MultiFileDropzoneUsage() {
       return newFileStates;
     });
 
-    
+
   }
 
   return (
@@ -93,7 +106,7 @@ export function MultiFileDropzoneUsage() {
                     }
                   },
                 });
-                
+
 
                 setFilesUploaded((filesUploaded) => [
                   ...filesUploaded,
@@ -109,39 +122,39 @@ export function MultiFileDropzoneUsage() {
         }}
       />
 
-        
-
-              {data && (
-                <div className="mt-4">
-                  {/* Render your data component here */}
-                  <pre>{JSON.stringify(data, null, 2)}</pre>
-                </div>
-              )}
 
 
-      
+      {data && (
+        <div className="mt-4">
+          {/* Render your data component here */}
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </div>
+      )}
+
+
+
 
 
       <div className={`${isVisible ? 'block' : 'hidden'} relative rounded-md p-10 m-24 max-w-[calc(100vw-1rem)] flex items-start flex-col cursor-auto border border-solid border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out`}>
-      {isLoading && (
-        <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-400 bg-opacity-50 z-10">
+        {isLoading && (
+          <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-400 bg-opacity-50 z-10">
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500 z-20"></div>
-        </div>
-    )}
+          </div>
+        )}
         <div className={` text-left items-start align-top grid grid-flow-col gap-2`}>
-        {filesUploaded?.map((file, i: number) => (
-          <div key={i} className='flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2'>
-            <div className='flex items-left gap-2 text-gray-500 dark:text-white'>
-              <div className='min-w-0 text-sm flex flex-col items-center mx-auto'>
-                <FileIcon size='60' className='shrink-0 fill-black ' />
-                <div title={file.name} className='overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap'>
-                  {file.name}
+          {filesUploaded?.map((file, i: number) => (
+            <div key={i} className='flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2'>
+              <div className='flex items-left gap-2 text-gray-500 dark:text-white'>
+                <div className='min-w-0 text-sm flex flex-col items-center mx-auto'>
+                  <FileIcon size='60' className='shrink-0 fill-black ' />
+                  <div title={file.name} className='overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap'>
+                    {file.name}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-        
+          ))}
+
         </div>
 
 
@@ -153,13 +166,13 @@ export function MultiFileDropzoneUsage() {
 
 
       <button onClick={() => {
-      console.log("filesUploaded:", filesUploaded);
+        console.log("filesUploaded:", filesUploaded);
         setIsVisible(true);
         fetchData(filesUploaded);
-    }
-    }>Sotiere</button>
+      }
+      }>Sotiere</button>
     </div>
-    
+
 
   );
 }

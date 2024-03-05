@@ -44,15 +44,13 @@ export async function POST(req: Request) {
         body: formData,
     });
 
-    const reponstext = JSON.parse(JSON.stringify(await response.text()));
+    const reponstext = await response.text();
 
-
-    console.log("response:", reponstext);
 
     if (!response.ok) {
         throw new Error(`Failed to upload file to SortAI API. Status code: ${response.status}`);
     }
 
-    return new Response('Email added successfully', { status: 200 });
+    return new Response(reponstext, { status: 200 });
 
 }
