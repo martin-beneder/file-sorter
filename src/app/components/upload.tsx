@@ -41,18 +41,25 @@ export function MultiFileDropzoneUsage() {
       const data = await response.json();
       // console.log("data:", data);
 
-      const sortdata = await fetch('/api/sortdata', {
+      let sortdata = await fetch('/api/sortdata', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
+      if (!sortdata.ok) {
+        sortdata = await fetch('/api/sortdata', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+      }
 
       const Reponssortdata = await sortdata.json();
-
       console.log("sortdata:", Reponssortdata);
-      
       setData(Reponssortdata ?? data);
 
     } catch (error) {
