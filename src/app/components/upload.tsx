@@ -10,6 +10,7 @@ import {
   FileIcon,
 } from 'lucide-react';
 import Folder from './folder';
+import FileBrowser from './folder';
 
 
 export function MultiFileDropzoneUsage() {
@@ -38,7 +39,7 @@ export function MultiFileDropzoneUsage() {
         body: JSON.stringify(filesUploaded),
       });
       const data = await response.json();
-      console.log("data:", data);
+      // console.log("data:", data);
 
       const sortdata = await fetch('/api/sortdata', {
         method: 'POST',
@@ -48,9 +49,11 @@ export function MultiFileDropzoneUsage() {
         body: JSON.stringify(data),
       });
 
-      console.log("sortdata:", await response.json());
+      const Reponssortdata = await sortdata.json();
 
-      setData(await response.json() ?? data);
+      console.log("sortdata:", Reponssortdata);
+      
+      setData(Reponssortdata ?? data);
 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -60,6 +63,7 @@ export function MultiFileDropzoneUsage() {
       setIsLoading(false);
     }
   };
+
 
 
 
@@ -155,18 +159,12 @@ export function MultiFileDropzoneUsage() {
                   </div>
                 </div>
               ))}
-              {data && <Folder data={data} path={[]} />}
+             
 
             </div>
           </div>
         )}
-
-        {data && (
-          <div className="mt-4">
-            {/* Render your data component here */}
-            <pre>{JSON.stringify(data, null, 2)}</pre>
-          </div>
-        )}
+         {data && <FileBrowser data={data} />}
 
 
 

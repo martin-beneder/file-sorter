@@ -1,38 +1,46 @@
-// components/Folder.tsx
+import React, { useState } from 'react';
 
-import React from 'react';
-
-interface FolderProps {
-    data: { [key: string]: any }; // Flexible to accommodate nested folders
-    path: string[];
+interface FileData {
+    [folderName: string]: string[];
+}
+interface FileBrowserProps {
+  data: FileData;
 }
 
-const Folder: React.FC<FolderProps> = ({ data, path }) => {
-    return (
+function removeSquareBrackets(folderName: string) {
+    return folderName.replace(/_/g, ' ');
+    }
+
+
+const FileBrowser: React.FC<FileBrowserProps> = ({ data }) => {
+  const [currentFolder, setCurrentFolder] = useState<string | null>(null);
+
+  return (
+    <div className="p-4">
+      {!currentFolder ? (
         <div>
-            {Object.entries(data).map(([key, value]) => {
-                if (Array.isArray(value)) {
-                    // Render files
-                    return (
-                        <div key={key} className="pl-4">
-                            <p className="font-bold">{key}</p>
-                            {value.map((file) => (
-                                <p key={file} className="pl-2">{file}</p>
-                            ))}
-                        </div>
-                    );
-                } else {
-                    // Recursively render folders
-                    return (
-                        <div key={key} className="pl-4">
-                            <p className="font-bold cursor-pointer" onClick={() => console.log(`Navigate to ${[...path, key].join('/')}`)}>{key}</p>
-                            <Folder data={value} path={[...path, key]} />
-                        </div>
-                    );
-                }
-            })}
+          <h2 className="text-xl font-bold">Folders</h2>
+          <ul>
+            {Object.keys(data).map((folder) => (
+              <li key={folder} className="cursor-pointer text-blue-500 hover:text-blue-700" onClick={() => setCurrentFolder(folder)}>
+                {removeSquareBrackets(folder.replace('_', ' '))}
+              </li>
+            ))}
+          </ul>
         </div>
-    );
+      ) : (
+        <div>
+          <button className="text-blue-500 hover:text-blue-700" onClick={() => setCurrentFolder(null)}>Back</button>
+          <h2 className="text-xl font-bold">{currentFolder.replace('_', ' ')}</h2>
+          <ul>
+            {data[currentFolder].map((file) => (
+              <li key={file}>{file}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
 };
 
-export default Folder;
+export default FileBrowser;
