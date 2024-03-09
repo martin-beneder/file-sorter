@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import Folder from './folder';
 import FileBrowser from './folder';
+import { get } from 'http';
 
 
 export function MultiFileDropzoneUsage() {
@@ -27,8 +28,10 @@ export function MultiFileDropzoneUsage() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<any>(null);
+  const [sortData, setSortData] = useState<any>(null);
+  
 
-  const fetchData = async (filesUploaded: FileUpload[]) => {
+  const getData = async (filesUploaded: FileUpload[]) => {
     setIsLoading(true);
     try {
       const response = await fetch('/api/sort', {
@@ -40,13 +43,25 @@ export function MultiFileDropzoneUsage() {
       });
       const data = await response.json();
       // console.log("data:", data);
+      setSortData(data);
+      return data;
+      
+    } catch (error) {
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
+  const getSortData = async (datar: string) => {
+    setIsLoading(true);
+    try {
       let sortdata = await fetch('/api/sortdata', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(datar),
       });
       if (!sortdata.ok) {
         sortdata = await fetch('/api/sortdata', {
@@ -54,22 +69,18 @@ export function MultiFileDropzoneUsage() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(datar),
         });
       }
 
       const Reponssortdata = await sortdata.json();
-      console.log("sortdata:", Reponssortdata);
-      setData(Reponssortdata ?? data);
-
+      setData(Reponssortdata ?? datar);
     } catch (error) {
-      console.error('Error fetching data:', error);
       setData(null);
     } finally {
-      console.log("data:", data);
       setIsLoading(false);
     }
-  };
+  }
 
 
 
@@ -153,13 +164,15 @@ export function MultiFileDropzoneUsage() {
             <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-400 bg-opacity-50 z-10">
               <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500 z-20"></div>
             </div>
+            {!data && (
+              
             <div className={` text-left items-start align-top grid grid-flow-col gap-2`}>
               {filesUploaded?.map((file, i: number) => (
-                <div key={i} className='flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2'>
+                <div key={i} title={file.name} className='flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2'>
                   <div className='flex items-left gap-2 text-gray-500 dark:text-white'>
                     <div className='min-w-0 text-sm flex flex-col items-center mx-auto'>
                       <FileIcon size='60' className='shrink-0 fill-black ' />
-                      <div title={file.name} className='overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap'>
+                      <div  className='overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap'>
                         {file.name}
                       </div>
                     </div>
@@ -169,24 +182,35 @@ export function MultiFileDropzoneUsage() {
              
 
             </div>
+            )}
           </div>
         )}
          {data && <FileBrowser data={data} />}
 
+        
+       
 
 
 
       </div>
 
+      {!data && (
+           <button className=' flex mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'  onClick={async () => {
+            console.log("filesUploaded:", filesUploaded);
+            setIsVisible(true);
+            getSortData(await getData(filesUploaded));
+            }
+          }>Sotiere</button>
+            )
+            }
+        {data && (
+          <button className='felx mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={() => {
+            getSortData(sortData);
+          }}>Resort</button>
+        )}
 
 
-
-      <button onClick={() => {
-        console.log("filesUploaded:", filesUploaded);
-        setIsVisible(true);
-        fetchData(filesUploaded);
-      }
-      }>Sotiere</button>
+      
     </div>
 
 
