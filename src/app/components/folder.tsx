@@ -66,7 +66,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({ data }) => {
             ) : (
                 <div>
                     <button className="text-blue-500 hover:text-blue-700" onClick={() => setPathandConvert("/")}>Back</button>
-                    <h2 className="text-xl font-bold">{path.replace('_', ' ')}</h2>
+                    <h2 className="text-xl font-bold">{removeSquareBrackets(path.replace('_', ' '))}</h2>
                     <div className={` text-left items-start align-top grid grid-flow-col gap-2`}>
                         {Dir?.map((file) => (
                             <div title={file} key={file} className='flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2'>

@@ -12,7 +12,7 @@ import { useDropzone, type DropzoneOptions } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
 
 const variants = {
-  base: 'relative rounded-md p-10 m-24 max-w-[calc(100vw-1rem)] flex items-start flex-col cursor-pointer border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out',
+  base: ' rounded-md p-10 m-12 grid grid-cols-3 gap-4 h-auto    item-start cursor-pointer border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out',
   active: 'border-2',
   disabled:
     'bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700 dark:border-gray-600',
@@ -154,35 +154,35 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                 </div>}
               
                 {/* Selected Files */}
-                <div className='z-50 text-left items-start align-top grid grid-flow-col gap-2  ' >
-          {value?.map(({ file, progress }, i) => (
-            <div
-              key={i}
-              className="flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2"
-            >
-              <div className="flex items-left gap-2 text-gray-500 dark:text-white">
-               
-                <div className="min-w-0 text-sm flex flex-col items-center mx-auto">
-                <FileIcon size="60" className="shrink-0 fill-black" />
-                <div className="text-xs text-gray-400 dark:text-gray-400">
-                    {formatFileSize(file.size)}
-                  </div>
-                  <div className="overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap">
-                    {file.name}
-                  </div>
-
-                 
-                  {progress === 'PENDING' ? (
-                    <button
-                        type="button"
-                        title='Remove file'
-                      className="rounded-md p-1 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => {
-                        void onChange?.(
-                          value.filter((_, index) => index !== i),
-                        );
-                      }}
+                <div className='z-50 text-left items-start align-top grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 gap-2  ' >
+                  {value?.map(({ file, progress }, i) => (
+                    <div
+                      key={i}
+                      className="flex h-auto w-30  sm:w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2"
                     >
+                      <div className="flex items-left gap-2 text-gray-500 dark:text-white">
+                      
+                        <div className="min-w-0 text-sm flex flex-col items-center mx-auto">
+                        <FileIcon size="60" className="shrink-0 fill-black" />
+                        <div className="text-xs text-gray-400 dark:text-gray-400">
+                            {formatFileSize(file.size)}
+                          </div>
+                          <div className="overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap">
+                            {file.name}
+                          </div>
+
+                        
+                          {progress === 'PENDING' ? (
+                            <button
+                                type="button"
+                                title='Remove file'
+                              className="rounded-md p-1 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                              onClick={() => {
+                                void onChange?.(
+                                  value.filter((_, index) => index !== i),
+                                );
+                              }}
+                            >
                       <Trash2Icon className="shrink-0" />
                     </button>
                   ) : progress === 'ERROR' ? (

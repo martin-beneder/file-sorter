@@ -7,11 +7,10 @@ import {
 import { useEdgeStore } from '@/app/lib/edgestore';
 import { useState } from 'react';
 import {
-  FileIcon,
+  FileIcon, 
 } from 'lucide-react';
-import Folder from './folder';
 import FileBrowser from './folder';
-import { get } from 'http';
+import Link from 'next/link';
 
 
 export function MultiFileDropzoneUsage() {
@@ -145,28 +144,15 @@ export function MultiFileDropzoneUsage() {
         }}
       />
 
-
-
-      {data && (
-        <div className="mt-4">
-          {/* Render your data component here */}
-          <pre>{JSON.stringify(data, null, 2)}</pre>
-        </div>
-      )}
-
-
-
-
-
-      <div className={`${isVisible ? 'block' : 'hidden'} relative rounded-md p-10 m-24 max-w-[calc(100vw-1rem)] flex items-start flex-col cursor-auto border border-solid border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out`}>
+      <div className={`${isVisible ? 'block' : 'hidden'} relative rounded-md p-10 m-12 max-w-[calc(100vw-1rem)] flex items-start flex-col cursor-auto border border-solid border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out`}>
         {isLoading && (
           <div>
             <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-gray-400 bg-opacity-50 z-10">
-              <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500 z-20"></div>
+              <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500 z-20"></div>
             </div>
             {!data && (
               
-            <div className={` text-left items-start align-top grid grid-flow-col gap-2`}>
+            <div className={` text-left items-start align-top grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 gap-2`}>
               {filesUploaded?.map((file, i: number) => (
                 <div key={i} title={file.name} className='flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2'>
                   <div className='flex items-left gap-2 text-gray-500 dark:text-white'>
@@ -195,7 +181,7 @@ export function MultiFileDropzoneUsage() {
       </div>
 
       {!data && (
-           <button className=' flex mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'  onClick={async () => {
+           <button className=' flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded'  onClick={async () => {
             console.log("filesUploaded:", filesUploaded);
             setIsVisible(true);
             getSortData(await getData(filesUploaded));
@@ -204,9 +190,12 @@ export function MultiFileDropzoneUsage() {
             )
             }
         {data && (
-          <button className='felx mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={() => {
+          <>
+          <button className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
             getSortData(sortData);
           }}>Resort</button>
+          <Link href="/app" className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' >Neu Start?</Link>
+          </>
         )}
 
 
