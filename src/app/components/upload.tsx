@@ -7,7 +7,7 @@ import {
 import { useEdgeStore } from '@/app/lib/edgestore';
 import { useState } from 'react';
 import {
-  FileIcon, 
+  FileIcon,
 } from 'lucide-react';
 import FileBrowser from './folder';
 import Link from 'next/link';
@@ -28,7 +28,8 @@ export function MultiFileDropzoneUsage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<any>(null);
   const [sortData, setSortData] = useState<any>(null);
-  
+
+
 
   const getData = async (filesUploaded: FileUpload[]) => {
     setIsLoading(true);
@@ -40,11 +41,15 @@ export function MultiFileDropzoneUsage() {
         },
         body: JSON.stringify(filesUploaded),
       });
+
+      console.log("response:", await response.json());
       const data = await response.json();
+      console.log("dasdawdasdwta:", data);
+      console.log("dasdawdasdwta:", data);
       // console.log("data:", data);
       setSortData(data);
       return data;
-      
+
     } catch (error) {
       return null;
     } finally {
@@ -54,6 +59,7 @@ export function MultiFileDropzoneUsage() {
 
   const getSortData = async (datar: string) => {
     setIsLoading(true);
+    console.log(JSON.stringify(datar))
     try {
       let sortdata = await fetch('/api/sortdata', {
         method: 'POST',
@@ -73,6 +79,7 @@ export function MultiFileDropzoneUsage() {
       }
 
       const Reponssortdata = await sortdata.json();
+      console.log("Reponssortdata:", Reponssortdata);
       setData(Reponssortdata ?? datar);
     } catch (error) {
       setData(null);
@@ -151,55 +158,55 @@ export function MultiFileDropzoneUsage() {
               <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500 z-20"></div>
             </div>
             {!data && (
-              
-            <div className={` text-left items-start align-top grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 gap-2`}>
-              {filesUploaded?.map((file, i: number) => (
-                <div key={i} title={file.name} className='flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2'>
-                  <div className='flex items-left gap-2 text-gray-500 dark:text-white'>
-                    <div className='min-w-0 text-sm flex flex-col items-center mx-auto'>
-                      <FileIcon size='60' className='shrink-0 fill-black ' />
-                      <div  className='overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap'>
-                        {file.name}
+
+              <div className={` text-left items-start align-top grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 gap-2`}>
+                {filesUploaded?.map((file, i: number) => (
+                  <div key={i} title={file.name} className='flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2'>
+                    <div className='flex items-left gap-2 text-gray-500 dark:text-white'>
+                      <div className='min-w-0 text-sm flex flex-col items-center mx-auto'>
+                        <FileIcon size='60' className='shrink-0 fill-black ' />
+                        <div className='overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap'>
+                          {file.name}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
-             
+                ))}
 
-            </div>
+
+              </div>
             )}
           </div>
         )}
-         {data && <FileBrowser data={data} />}
+        {data && <FileBrowser data={data} />}
 
-        
-       
+
+
 
 
 
       </div>
 
       {!data && (
-           <button className=' flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded'  onClick={async () => {
-            console.log("filesUploaded:", filesUploaded);
-            setIsVisible(true);
-            getSortData(await getData(filesUploaded));
-            }
-          }>Sotiere</button>
-            )
-            }
-        {data && (
-          <>
+        <button className=' flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={async () => {
+          console.log("filesUploaded:", filesUploaded);
+          setIsVisible(true);
+          getSortData(await getData(filesUploaded));
+        }
+        }>Sotiere</button>
+      )
+      }
+      {data && (
+        <>
           <button className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
             getSortData(sortData);
           }}>Resort</button>
           <Link href="/app" className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' >Neu Start?</Link>
-          </>
-        )}
+        </>
+      )}
 
 
-      
+
     </div>
 
 

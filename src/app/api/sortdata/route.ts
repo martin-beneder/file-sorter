@@ -11,22 +11,13 @@ export async function POST(req: Request) {
         throw new Error("Request body is empty");
     }
 
-    const chunks = [];
-    const reader = req.body.getReader();
-    let result;
-    while (!(result = await reader.read()).done) {
-        chunks.push(result.value);
-    }
-    const concatenatedChunks = new Uint8Array(chunks.reduce((acc: number[], val) => acc.concat(Array.from(val)), []));
-    const body = new TextDecoder().decode(concatenatedChunks);
-
-    console.log("response:", body);
+    console.log("responsess:", req.body);
 
 
     const filesFormData = new FormData();
-    filesFormData.append('filejson', body);
+    filesFormData.append('filejson', JSON.stringify(req.body));
 
-    const sortedFiles = await fetch('https://sortaiapi.azurewebsites.net/sort/', {
+    const sortedFiles = await fetch(env.SORTAI_API_URL as string + "sortv2/", {
         headers: {
             'access_token': env.SORTAI_API_KEY as string,
         },

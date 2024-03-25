@@ -28,24 +28,22 @@ async function convertLinkToFormData(formData: FormData, url: string, fieldName:
 export async function POST(req: Request) {
     const body = await req.json();
 
-    const formData = new FormData();
+    console.log("responsdfse:", JSON.stringify(body));
 
-    for (const file of body) {
-        const { name, result } = file;
-        const url = result.url as string;
-        await convertLinkToFormData(formData, url, "files", name);
-    }
 
-    const response = await fetch('https://sortaiapi.azurewebsites.net/uploadfile/', {
+    const filesFormData = new FormData();
+    filesFormData.append('filejson', JSON.stringify(body));
+
+
+    const response = await fetch(env.SORTAI_API_URL as string + "uploadfilev2/", {
         headers: {
             'access_token': env.SORTAI_API_KEY as string,
         },
         method: 'POST',
-        body: formData,
+        body: filesFormData,
     });
-
-    const reponstext = await response.text();
-
+    const reponstext = await response.json();
+    console.log("reponstext:", reponstext);
 
     if (!response.ok) {
         throw new Error(`Failed to upload file to SortAI API. Status code: ${response.status}`);
