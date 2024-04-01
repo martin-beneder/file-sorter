@@ -36,19 +36,12 @@ export function MultiFileDropzoneUsage() {
     try {
       const response = await fetch('/api/sort', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(filesUploaded),
       });
-
-      console.log("response:", await response.json());
-      const data = await response.json();
-      console.log("dasdawdasdwta:", data);
-      console.log("dasdawdasdwta:", data);
+      const datar = await response.json();
       // console.log("data:", data);
-      setSortData(data);
-      return data;
+      setSortData(datar);
+      return datar;
 
     } catch (error) {
       return null;
@@ -59,21 +52,14 @@ export function MultiFileDropzoneUsage() {
 
   const getSortData = async (datar: string) => {
     setIsLoading(true);
-    console.log(JSON.stringify(datar))
     try {
       let sortdata = await fetch('/api/sortdata', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(datar),
       });
       if (!sortdata.ok) {
         sortdata = await fetch('/api/sortdata', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
           body: JSON.stringify(datar),
         });
       }
@@ -81,6 +67,22 @@ export function MultiFileDropzoneUsage() {
       const Reponssortdata = await sortdata.json();
       console.log("Reponssortdata:", Reponssortdata);
       setData(Reponssortdata ?? datar);
+    } catch (error) {
+      setData(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const downloadSortedFiles = async (datar: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/sortdata', {
+        method: 'POST',
+        body: JSON.stringify(datar),
+      });
+      const data = await response.json();
+      return data;
     } catch (error) {
       setData(null);
     } finally {
@@ -189,7 +191,6 @@ export function MultiFileDropzoneUsage() {
 
       {!data && (
         <button className=' flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={async () => {
-          console.log("filesUploaded:", filesUploaded);
           setIsVisible(true);
           getSortData(await getData(filesUploaded));
         }
@@ -198,10 +199,15 @@ export function MultiFileDropzoneUsage() {
       }
       {data && (
         <>
-          <button className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
+          <button disabled={isLoading} className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
             getSortData(sortData);
           }}>Resort</button>
-          <Link href="/app" className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' >Neu Start?</Link>
+          <button disabled={isLoading} className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
+
+          }}>Download</button>
+          <button disabled={isLoading} className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
+            location.reload();
+          }}>Neu Start?</button>
         </>
       )}
 

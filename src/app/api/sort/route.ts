@@ -28,9 +28,6 @@ async function convertLinkToFormData(formData: FormData, url: string, fieldName:
 export async function POST(req: Request) {
     const body = await req.json();
 
-    console.log("responsdfse:", JSON.stringify(body));
-
-
     const filesFormData = new FormData();
     filesFormData.append('filejson', JSON.stringify(body));
 
@@ -48,7 +45,6 @@ export async function POST(req: Request) {
     if (!response.ok) {
         throw new Error(`Failed to upload file to SortAI API. Status code: ${response.status}`);
     }
-
-    return new Response(reponstext, { status: 200 });
+    return Response.json(reponstext, { status: 200 });
 
 }

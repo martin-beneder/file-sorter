@@ -13,9 +13,12 @@ export async function POST(req: Request) {
 
     console.log("responsess:", req.body);
 
+    const body = await req.json();
+
+
 
     const filesFormData = new FormData();
-    filesFormData.append('filejson', JSON.stringify(req.body));
+    filesFormData.append('filejson', JSON.stringify(body));
 
     const sortedFiles = await fetch(env.SORTAI_API_URL as string + "sortv2/", {
         headers: {
@@ -25,11 +28,11 @@ export async function POST(req: Request) {
         body: filesFormData,
     });
 
-    const sortFilesRepsons = await sortedFiles.text();
+    const sortFilesRepsons = await sortedFiles.json();
     if (!sortedFiles.ok) {
         throw new Error(`Failed to upload file to SortAI API. Status code: ${sortedFiles.status}`);
     }
 
-    return new Response(sortFilesRepsons, { status: 200 });
+    return Response.json(sortFilesRepsons, { status: 200 });
 
 }
