@@ -11,12 +11,18 @@ import {
 } from 'lucide-react';
 import FileBrowser from './folder';
 import Link from 'next/link';
+import { useUser } from '@clerk/nextjs';
+import { subscriptionmodel } from '../lib/util';
 
 
 export function MultiFileDropzoneUsage() {
   const [fileStates, setFileStates] = useState<FileState[]>([]);
   const { edgestore } = useEdgeStore();
   const [isVisible, setIsVisible] = useState(false);
+
+
+
+  const user = useUser();
 
   interface FileUpload {
     name: string;
@@ -65,8 +71,8 @@ export function MultiFileDropzoneUsage() {
       }
 
       const Reponssortdata = await sortdata.json();
-      console.log("Reponssortdata:", Reponssortdata);
-      setData(Reponssortdata ?? datar);
+      setData(await Reponssortdata);
+      console.log("data:", await data);
     } catch (error) {
       setData(null);
     } finally {
@@ -77,12 +83,26 @@ export function MultiFileDropzoneUsage() {
   const downloadSortedFiles = async (datar: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/sortdata', {
+      let sortdata = await fetch('/api/download', {
         method: 'POST',
-        body: JSON.stringify(datar),
+        body: JSON.stringify({ data: datar }),
       });
-      const data = await response.json();
-      return data;
+      if (!sortdata.ok) {
+        sortdata = await fetch('/api/download', {
+          method: 'POST',
+          body: JSON.stringify({ data: datar }),
+        });
+      }
+
+      const Reponssortdata = await sortdata.blob();
+      console.log("Reponssortdata:", Reponssortdata);
+      const url = URL.createObjectURL(Reponssortdata); // And this line
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'sortedfiles.zip');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
     } catch (error) {
       setData(null);
     } finally {
@@ -108,6 +128,8 @@ export function MultiFileDropzoneUsage() {
 
   }
 
+
+
   return (
     <div>
       <MultiFileDropzone
@@ -116,6 +138,13 @@ export function MultiFileDropzoneUsage() {
         onChange={(files) => {
           setFileStates(files);
         }}
+        dropzoneOptions={
+          {
+            maxFiles: subscriptionmodel(user?.user?.unsafeMetadata?.subscriptionid as number)?.maxfiles ?? 0,
+            maxSize: 536870912,
+            accept: { 'image/*': [], 'application/vnd.ms-excel': [], 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [], 'application/pdf': [], 'application/msword': [], 'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [], 'text/plain': [], 'application/vnd.ms-powerpoint': [], 'application/vnd.openxmlformats-officedocument.presentationml.presentation': [], 'application/vnd.oasis.opendocument.text': [], 'application/vnd.oasis.opendocument.spreadsheet': [], 'application/vnd.oasis.opendocument.presentation': [], 'text/css': [], 'text/csv': [], 'application/rtf': [], 'text/javascript': [], 'text/html': [] },
+          }
+        }
         onFilesAdded={async (addedFiles) => {
           setFileStates([...fileStates, ...addedFiles]);
           await Promise.all(
@@ -143,6 +172,8 @@ export function MultiFileDropzoneUsage() {
                   ...filesUploaded,
                   { name: addedFileState.file.name, result: res },
                 ]);
+
+
                 console.log("res:", res);
                 console.log("filesUploaded:", filesUploaded);
               } catch (err) {
@@ -161,7 +192,7 @@ export function MultiFileDropzoneUsage() {
             </div>
             {!data && (
 
-              <div className={` text-left items-start align-top grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 gap-2`}>
+              <div className={` text-left items-start align-top grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 gap-2`}>
                 {filesUploaded?.map((file, i: number) => (
                   <div key={i} title={file.name} className='flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2'>
                     <div className='flex items-left gap-2 text-gray-500 dark:text-white'>
@@ -198,17 +229,17 @@ export function MultiFileDropzoneUsage() {
       )
       }
       {data && (
-        <>
-          <button disabled={isLoading} className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
+        <div className='flex flex-row mx-auto justify-center  ' >
+          <button disabled={isLoading} className='flex mr-5 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
             getSortData(sortData);
-          }}>Resort</button>
-          <button disabled={isLoading} className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
-
+          }}>Neu Sotieren</button>
+          <button disabled={isLoading} className='flex mr-5 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
+            downloadSortedFiles(data);
           }}>Download</button>
-          <button disabled={isLoading} className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
+          <button disabled={isLoading} className='flex  bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
             location.reload();
           }}>Neu Start?</button>
-        </>
+        </div>
       )}
 
 

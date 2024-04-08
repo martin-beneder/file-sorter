@@ -1,19 +1,41 @@
 
-import { NextApiRequest, NextApiResponse } from 'next';
+import { subscriptionmodel } from '@/app/lib/util';
+import { clerkClient, getAuth } from '@clerk/nextjs/server';
+import { NextRequest } from 'next/server';
 import { env } from 'process';
 
 function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function POST(req: Request) {
-    if (!req.body) {
-        throw new Error("Request body is empty");
+export async function POST(req: NextRequest) {
+
+    const { userId } = getAuth(req);
+    if (!userId) {
+        return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const user = await clerkClient.users.getUser(userId);
+
+    console.log("user:", user.unsafeMetadata);
+    if (!((await clerkClient.users.getUser(userId)).unsafeMetadata.lastsort === null)) {
+
+        if (new Date(String((await clerkClient.users.getUser(userId)).unsafeMetadata.lastsort)) >= (new Date())) {
+            return Response.json({ error: "You are not allowed to sort files yet" }, { status: 400 });
+        }
+
     }
 
-    console.log("responsess:", req.body);
 
     const body = await req.json();
+
+
+    await clerkClient.users.updateUser(userId, {
+        unsafeMetadata: {
+            ...user?.unsafeMetadata,
+            lastsort: new Date()
+        }
+    });
+
 
 
 

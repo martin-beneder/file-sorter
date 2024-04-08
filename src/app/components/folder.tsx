@@ -48,7 +48,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({ data }) => {
             {!path ? (
                 <div>
                     <h2 className="text-xl font-bold">/</h2>
-                    <div className={` text-left items-start align-top grid grid-flow-col gap-2`}>
+                    <div className={` text-left items-start align-top grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 gap-2`}>
                         {Object.keys(data).map((folder) => (
                             <div title={removeSquareBrackets(folder.replace('_', ' '))} key={folder} className='cursor-pointer flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2' onClick={() => setPathandConvert(folder)}>
                                 <div className='flex items-left gap-2 text-gray-500 dark:text-white'>
@@ -67,7 +67,7 @@ const FileBrowser: React.FC<FileBrowserProps> = ({ data }) => {
                 <div>
                     <button className="text-blue-500 hover:text-blue-700" onClick={() => setPathandConvert("/")}>Back</button>
                     <h2 className="text-xl font-bold">{removeSquareBrackets(path.replace('_', ' '))}</h2>
-                    <div className={` text-left items-start align-top grid grid-flow-col gap-2`}>
+                    <div className={` text-left items-start align-top grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 gap-2`}>
                         {Object.keys(dir).map((fileName) => (
                             <div title={fileName} key={fileName} className='flex h-auto  w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2'>
                                 <div className='flex items-left gap-2 text-gray-500 dark:text-white'>

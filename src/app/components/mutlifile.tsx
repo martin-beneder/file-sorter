@@ -15,7 +15,7 @@ const variants = {
   base: ' rounded-md p-10 m-12 grid grid-cols-3 gap-4 h-auto    item-start cursor-pointer border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out',
   active: 'border-2',
   disabled:
-    'bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30 dark:bg-gray-700 dark:border-gray-600',
+    'bg-gray-200 border-gray-300 cursor-default pointer-events-none bg-opacity-30  ',
   accept: 'border border-blue-500 bg-blue-500 bg-opacity-10',
   reject: 'border border-red-700 bg-red-700 bg-opacity-10',
 };
@@ -61,7 +61,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
     }
     // dropzone configuration
 
-    
+
 
     const {
       getRootProps,
@@ -83,7 +83,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
           return;
         }
         if (files) {
-          
+
           const addedFiles = files.map<FileState>((file) => ({
             file,
             key: Math.random().toString(36).slice(2),
@@ -144,74 +144,74 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                 className: dropZoneClassName,
               })}
             >
-              <input className='z-0'  ref={ref} {...getInputProps()} />
-              {value?.length ? null : 
+              <input className='z-0' ref={ref} {...getInputProps()} />
+              {value?.length ? null :
                 <div className="flex flex-col mx-auto my-10 items-center justify-center z-0 text-xs text-gray-400">
-                <UploadCloudIcon className="mb-1 h-14 w-14" />
-                <div className="text-gray-400">
-                  drag & drop oder Klick um hoch zu laden
-                </div>
-                </div>}
-              
-                {/* Selected Files */}
-                <div className='z-50 text-left items-start align-top grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-9 gap-2  ' >
-                  {value?.map(({ file, progress }, i) => (
-                    <div
-                      key={i}
-                      className="flex h-auto w-30  sm:w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-300 px-4 py-2"
-                    >
-                      <div className="flex items-left gap-2 text-gray-500 dark:text-white">
-                      
-                        <div className="min-w-0 text-sm flex flex-col items-center mx-auto">
-                        <FileIcon size="60" className="shrink-0 fill-black" />
-                        <div className="text-xs text-gray-400 dark:text-gray-400">
-                            {formatFileSize(file.size)}
-                          </div>
-                          <div className="overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap">
-                            {file.name}
-                          </div>
-
-                        
-                          {progress === 'PENDING' ? (
-                            <button
-                                type="button"
-                                title='Remove file'
-                              className="rounded-md p-1 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                              onClick={() => {
-                                void onChange?.(
-                                  value.filter((_, index) => index !== i),
-                                );
-                              }}
-                            >
-                      <Trash2Icon className="shrink-0" />
-                    </button>
-                  ) : progress === 'ERROR' ? (
-                    <LucideFileWarning className="shrink-0 text-red-600 dark:text-red-400" />
-                  ) : progress !== 'COMPLETE' ? (
-                    <div>{Math.round(progress)}%</div>
-                  ) : (
-                    <CheckCircleIcon className="shrink-0 text-green-600 dark:text-gray-400" />
-                  )}
-                </div>
-                
-              </div>
-              {/* Progress Bar */}
-              {typeof progress === 'number' && (
-                <div className="relative h-0">
-                  <div className=" text-black absolute top-1 h-1 w-full overflow-clip rounded-full bg-gray-200 dark:bg-gray-700">
-                    <div
-                      className="h-full bg-gray-400 transition-all duration-300 ease-in-out dark:bg-white"
-                      style={{
-                        width: progress ? `${progress}%` : '0%',
-                      }}
-                    />
+                  <UploadCloudIcon className="mb-1 h-14 w-14" />
+                  <div className="text-gray-400">
+                    drag & drop oder Klick um hoch zu laden
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
-          </div>
-              
+                </div>}
+
+              {/* Selected Files */}
+              <div className='z-50 text-left items-start align-top grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-7 2xl:grid-cols-8 gap-2  ' >
+                {value?.map(({ file, progress }, i) => (
+                  <div
+                    key={i}
+                    className="flex h-auto w-30  sm:w-40 max-w-[50vw] flex-col justify-center rounded border border-gray-200 px-4 py-2"
+                  >
+                    <div className="flex items-left gap-2 text-gray-200 dark:text-white">
+
+                      <div className="min-w-0 text-sm flex flex-col items-center mx-auto">
+                        <FileIcon size="60" className="shrink-0 fill-black" />
+                        <div className="text-xs text-gray-200 dark:text-gray-200">
+                          {formatFileSize(file.size)}
+                        </div>
+                        <div className="overflow-hidden w-28 text-black overflow-ellipsis whitespace-nowrap">
+                          {file.name}
+                        </div>
+
+
+                        {progress === 'PENDING' ? (
+                          <button
+                            type="button"
+                            title='Remove file'
+                            className="rounded-md p-1 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-100"
+                            onClick={() => {
+                              void onChange?.(
+                                value.filter((_, index) => index !== i),
+                              );
+                            }}
+                          >
+                            <Trash2Icon className="shrink-0" />
+                          </button>
+                        ) : progress === 'ERROR' ? (
+                          <LucideFileWarning className="shrink-0 text-red-600 dark:text-red-400" />
+                        ) : progress !== 'COMPLETE' ? (
+                          <div>{Math.round(progress)}%</div>
+                        ) : (
+                          <CheckCircleIcon className="shrink-0 text-green-600 dark:text-gray-400" />
+                        )}
+                      </div>
+
+                    </div>
+                    {/* Progress Bar */}
+                    {typeof progress === 'number' && (
+                      <div className="relative h-0">
+                        <div className=" text-black absolute top-1 h-1 w-full overflow-clip rounded-full bg-gray-400 dark:bg-gray-200">
+                          <div
+                            className="h-full bg-gray-400 transition-all duration-300 ease-in-out dark:bg-black"
+                            style={{
+                              width: progress ? `${progress}%` : '0%',
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
             </div>
 
             {/* Error Text */}
@@ -220,7 +220,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
             </div>
           </div>
 
-          
+
         </div>
       </div>
     );

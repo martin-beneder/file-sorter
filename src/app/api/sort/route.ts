@@ -1,5 +1,7 @@
 
-import { NextApiRequest, NextApiResponse } from 'next';
+import { subscriptionmodel } from '@/app/lib/util';
+import { clerkClient, getAuth } from '@clerk/nextjs/server';
+import { NextRequest } from 'next/server';
 import { env } from 'process';
 
 function sleep(ms: number) {
@@ -25,8 +27,18 @@ async function convertLinkToFormData(formData: FormData, url: string, fieldName:
     return formData;
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+    const { userId } = getAuth(req);
+    if (!userId) {
+        return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const user = await clerkClient.users.getUser(userId);
     const body = await req.json();
+    if (JSON.stringify(body).length < subscriptionmodel(user?.unsafeMetadata?.subscriptionid as number)?.maxfiles ?? 0) {
+        return Response.json({ error: "File limit exceeded" }, { status: 400 });
+    }
+
+
 
     const filesFormData = new FormData();
     filesFormData.append('filejson', JSON.stringify(body));
