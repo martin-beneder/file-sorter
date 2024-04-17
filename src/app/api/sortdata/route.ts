@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     console.log("user:", user.unsafeMetadata);
     if (!((await clerkClient.users.getUser(userId)).unsafeMetadata.lastsort === null)) {
 
-        if (new Date(String((await clerkClient.users.getUser(userId)).unsafeMetadata.lastsort)) >= (new Date())) {
+        if (new Date(String((await clerkClient.users.getUser(userId)).unsafeMetadata.lastsort)) >= (new Date().setMinutes(new Date().getMinutes() - 0.1) as unknown as Date)) {
             return Response.json({ error: "You are not allowed to sort files yet" }, { status: 400 });
         }
 
@@ -42,18 +42,33 @@ export async function POST(req: NextRequest) {
     const filesFormData = new FormData();
     filesFormData.append('filejson', JSON.stringify(body));
 
-    const sortedFiles = await fetch(env.SORTAI_API_URL as string + "sortv2/", {
-        headers: {
-            'access_token': env.SORTAI_API_KEY as string,
-        },
-        method: 'POST',
-        body: filesFormData,
-    });
 
-    const sortFilesRepsons = await sortedFiles.json();
+
+    let sortedFiles;
+
+    for (let i = 0; i <= 3; i++) {
+
+        sortedFiles = await fetch(env.SORTAI_API_URL as string + "sortv2/", {
+            headers: {
+                'access_token': env.SORTAI_API_KEY as string,
+            },
+            method: 'POST',
+            body: filesFormData,
+        });
+        if (sortedFiles.ok) {
+            break;
+        }
+    }
+    if (!sortedFiles) {
+        throw new Error(`Failed to upload file to SortAI API. Status code: 500`);
+    }
+
     if (!sortedFiles.ok) {
         throw new Error(`Failed to upload file to SortAI API. Status code: ${sortedFiles.status}`);
     }
+
+    const sortFilesRepsons = await sortedFiles.json();
+
 
     return Response.json(sortFilesRepsons, { status: 200 });
 

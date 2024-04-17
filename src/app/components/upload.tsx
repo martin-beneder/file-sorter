@@ -34,6 +34,7 @@ export function MultiFileDropzoneUsage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<any>(null);
   const [sortData, setSortData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
 
 
@@ -44,8 +45,10 @@ export function MultiFileDropzoneUsage() {
         method: 'POST',
         body: JSON.stringify(filesUploaded),
       });
+      if (await response.status === 400) {
+        setError("Bleib langsam, du kannst nicht so schnell Datein hochladen.")
+      }
       const datar = await response.json();
-      // console.log("data:", data);
       setSortData(datar);
       return datar;
 
@@ -58,23 +61,30 @@ export function MultiFileDropzoneUsage() {
 
   const getSortData = async (datar: string) => {
     setIsLoading(true);
+    setError(null);
     try {
       let sortdata = await fetch('/api/sortdata', {
         method: 'POST',
         body: JSON.stringify(datar),
       });
-      if (!sortdata.ok) {
-        sortdata = await fetch('/api/sortdata', {
-          method: 'POST',
-          body: JSON.stringify(datar),
-        });
-      }
+      if (await sortdata.status === 400) {
+        setError("Bleib langsam, du kannst nicht so schnell sortieren.")
+      } else {
+        if (!sortdata.ok) {
+          sortdata = await fetch('/api/sortdata', {
+            method: 'POST',
+            body: JSON.stringify(datar),
+          });
+        }
 
-      const Reponssortdata = await sortdata.json();
-      setData(await Reponssortdata);
-      console.log("data:", await data);
-    } catch (error) {
-      setData(null);
+        if (sortdata.ok) {
+
+          const Reponssortdata = await sortdata.json();
+          setData(await Reponssortdata);
+          console.log("data:", await data);
+        }
+
+      }
     } finally {
       setIsLoading(false);
     }
@@ -213,17 +223,17 @@ export function MultiFileDropzoneUsage() {
         )}
         {data && <FileBrowser data={data} />}
 
-
-
-
-
-
       </div>
+      {error && (
+        <div className='flex flex-row mx-auto justify-center my-5 ' >
+          <div className='flex mr-5 bg-red-500 text-white font-bold py-2 px-4 rounded'>{error}</div>
+        </div>
+      )}
 
       {!data && (
         <button className=' flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={async () => {
           setIsVisible(true);
-          getSortData(await getData(filesUploaded));
+          getSortData(sortData ?? await getData(filesUploaded));
         }
         }>Sotiere</button>
       )
@@ -241,6 +251,8 @@ export function MultiFileDropzoneUsage() {
           }}>Neu Start?</button>
         </div>
       )}
+
+
 
 
 

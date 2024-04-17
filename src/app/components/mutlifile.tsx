@@ -214,15 +214,19 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
 
             </div>
 
-            {/* Error Text */}
-            <div className="mt-1 text-xs text-red-500">
-              {customError ?? errorMessage}
-            </div>
+
           </div>
 
 
         </div>
+        {/* Error Text */}
+        {(customError ?? errorMessage) && (
+          <div className='flex flex-row mx-auto justify-center my-5 ' >
+            <div className='flex mr-5 bg-red-500 text-white font-bold py-2 px-4 rounded'>{customError ?? errorMessage}</div>
+          </div>
+        )}
       </div>
+
     );
   },
 );

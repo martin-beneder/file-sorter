@@ -34,6 +34,9 @@ export default async function NavBar() {
         <div className="items-stretch self-center flex  lg:flex gap-3.5 my-auto ">
           {session ? (
             <>
+              <Link href="/pricing" className="text-gray-400 text-center text-sm font-normal  whitespace-nowrap items-stretch bg-slate-100 grow justify-center px-1 py-1 rounded-md broder border-gray-400 border-dashed border-2">
+                {user.unsafeMetadata.subscription as string}
+              </Link>
               <UserButton afterSignOutUrl="/" />
             </>
           ) : (

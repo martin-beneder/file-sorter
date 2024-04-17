@@ -38,25 +38,53 @@ export async function POST(req: NextRequest) {
         return Response.json({ error: "File limit exceeded" }, { status: 400 });
     }
 
+    if (!((await clerkClient.users.getUser(userId)).unsafeMetadata.lastfileupload === null)) {
+
+        if (new Date(String((await clerkClient.users.getUser(userId)).unsafeMetadata.lastfileupload)) >= (new Date().setMinutes(new Date().getMinutes() - 0.5) as unknown as Date)) {
+            return Response.json({ error: "You are not allowed to upload files yet" }, { status: 400 });
+        }
+
+    }
+
+
+
 
 
     const filesFormData = new FormData();
     filesFormData.append('filejson', JSON.stringify(body));
 
+    let response;
 
-    const response = await fetch(env.SORTAI_API_URL as string + "uploadfilev2/", {
-        headers: {
-            'access_token': env.SORTAI_API_KEY as string,
-        },
-        method: 'POST',
-        body: filesFormData,
-    });
+    for (let i = 0; i <= 3; i++) {
+        console.log(i)
+        response = await fetch(env.SORTAI_API_URL as string + "uploadfilev2/", {
+            headers: {
+                'access_token': env.SORTAI_API_KEY as string,
+            },
+            method: 'POST',
+            body: filesFormData,
+        });
+
+        if (response.ok) {
+            break;
+        }
+    }
+    if (!response?.ok) {
+        throw new Error(`Failed to upload file to SortAI API. Status code: 500`);
+    }
+
+
     const reponstext = await response.json();
     console.log("reponstext:", reponstext);
 
-    if (!response.ok) {
-        throw new Error(`Failed to upload file to SortAI API. Status code: ${response.status}`);
-    }
+    await clerkClient.users.updateUser(userId, {
+        unsafeMetadata: {
+            ...user?.unsafeMetadata,
+            lastfileupload: new Date()
+        }
+    });
+
     return Response.json(reponstext, { status: 200 });
+
 
 }
