@@ -1,15 +1,14 @@
 "use client";
 import { Check } from "lucide-react";
 import * as React from "react";
-import { Elements, PaymentElement } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import { env } from "process";
-
-// Make sure to call `loadStripe` outside of a component’s render to avoid
-// recreating the `Stripe` object on every render.
-const stripePromise = loadStripe('pk_test_51P5pp7FbXc7uYDxn1fGNy0k7s6fYfZval0xCr4R94gRthJUv2Cc4uZTLqVC0vvsCJYR8wjmkcOEP73Vk8DhYXEWu00BhkuSWwP');
-
-
+import type Stripe from "stripe";
+import { createCheckoutSession } from "../api/stripe/route";
+import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js";
+import getStripe from "../lib/stripe";
+interface CheckoutFormProps {
+    uiMode: Stripe.Checkout.SessionCreateParams.UiMode;
+}
 function buy() {
     return null;
 }
@@ -166,7 +165,26 @@ const plans = [
     },
 ];
 
+
+
 function pricing() {
+
+    const [clientSecret, setClientSecret] = React.useState<string | null>(null);
+    const [loading, setLoading] = React.useState<boolean>(false);
+
+    async function handleSubscription(data: FormData) {
+        setLoading(true);
+        const uiMode = data.get(
+            "uiMode",
+        ) as Stripe.Checkout.SessionCreateParams.UiMode;
+        const { client_secret, url } = await createCheckoutSession(data);
+
+        if (uiMode === "embedded") return setClientSecret(client_secret);
+
+        window.location.assign(url as string);
+        setLoading(false);
+    }
+
 
 
     const options = {
@@ -190,12 +208,26 @@ function pricing() {
                     </div>
                 </div>
             </div>
-            <Elements stripe={stripePromise} options={options}>
-                <form>
-
-                    <button>Submit</button>
-                </form>
-            </Elements>
+            <form action={handleSubscription}>
+                <input type="hidden" name="uiMode" value={"hosted"} />
+                <input type="hidden" name="price" value={"price_1P5u0SFbXc7uYDxnsKiloE1L"} />
+                <input type="hidden" name="email" value={"beneder.martin@gmail.com"} />
+                <button
+                    className="checkout-style-background"
+                    type="submit"
+                    disabled={loading}
+                >
+                    Sub
+                </button>
+            </form>
+            {clientSecret ? (
+                <EmbeddedCheckoutProvider
+                    stripe={getStripe()}
+                    options={{ clientSecret }}
+                >
+                    <EmbeddedCheckout />
+                </EmbeddedCheckoutProvider>
+            ) : null}
 
         </main>
     );
