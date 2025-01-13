@@ -194,7 +194,7 @@ export function MultiFileDropzoneUsage() {
           <button className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' onClick={() => {
             getSortData(sortData);
           }}>Resort</button>
-          <Link href="/app" className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' >Neu Start?</Link>
+          <button onClick={() => {location.reload()}} className='flex mx-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded' >Neu Start?</button>
           </>
         )}
 
