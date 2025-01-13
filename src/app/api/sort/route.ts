@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     }
     const user = await clerkClient.users.getUser(userId);
     const body = await req.json();
-    if (JSON.stringify(body).length < subscriptionmodel(user?.unsafeMetadata?.subscriptionid as number)?.maxfiles ?? 0) {
+    if (JSON.stringify(body).length < (subscriptionmodel(user?.unsafeMetadata?.subscriptionid as number)?.maxfiles || 0)) {
         return Response.json({ error: "File limit exceeded" }, { status: 400 });
     }
 
