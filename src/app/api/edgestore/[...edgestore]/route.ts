@@ -5,12 +5,12 @@ import { z } from 'zod';
 type Context = {
     userId: string;
 };
- 
+
 async function createContext({ req }: CreateContextOptions): Promise<Context> {
     const { userId } = getAuth(req);
     return { userId: userId! };
 }
- 
+
 const es = initEdgeStore.context<Context>().create();
 
 /**
@@ -18,14 +18,14 @@ const es = initEdgeStore.context<Context>().create();
  */
 const edgeStoreRouter = es.router({
     publicFiles: es
-    .fileBucket()
-    
-    // e.g. /publicFiles/{category}/{author}
-    .path(({ ctx, input }) => [
-      { author: ctx.userId },
+        .fileBucket()
 
-    ])
-    
+        // e.g. /publicFiles/{category}/{author}
+        .path(({ ctx, input }) => [
+            { author: ctx.userId },
+
+        ])
+
 });
 
 const handler = createEdgeStoreNextHandler({

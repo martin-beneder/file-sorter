@@ -1,11 +1,6 @@
 
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import * as context from "next/headers";
-import { redirect } from "next/navigation";
-import Form from "../../components/form";
-import Link from "next/link";
+import React from "react";
 import Image from "next/image";
 import { SignUp as SignUpClerk } from "@clerk/nextjs";
 
@@ -31,11 +26,11 @@ export default async function SignUp() {
                 <h1 className="text-black text-xl font-bold self-center whitespace-nowrap mt-7">
                   Regrestriere dich jetzt bei SortAI
                 </h1>
-                <SignUpClerk />
-                
+                <SignUpClerk unsafeMetadata={{ subscription: "free", subscriptionid: 1, lastfileupload: null, lastsort: null }} />
+
               </header>
 
-              
+
             </div>
           </div>
           <div className="flex flex-col items-stretch w-[72%] ml-5 max-md:w-full max-md:ml-0">
