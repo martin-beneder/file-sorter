@@ -7,8 +7,11 @@ type Context = {
 };
 
 async function createContext({ req }: CreateContextOptions): Promise<Context> {
-    const { userId } = getAuth(req);
-    return { userId: userId! };
+    const { userId } = await getAuth(req);
+    if (!userId) {
+        throw new Error('User not authenticated');
+    }
+    return { userId };
 }
 
 const es = initEdgeStore.context<Context>().create();

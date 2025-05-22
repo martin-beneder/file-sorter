@@ -1,5 +1,5 @@
 import { FileIcon, Folder } from 'lucide-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 
 
@@ -22,7 +22,7 @@ interface FileBrowserProps {
 
 type Dir = Record<string, FileDetails>;
 
-const FileBrowser: React.FC<FileBrowserProps> = ({ data }) => {
+function FileBrowser({ data }: FileBrowserProps) {
     const [path, setPath] = useState<string | null>(null);
     const [dir, setDir] = useState<Record<string, FileDetails>>({});
     function setPathandConvert(newPath: string) {

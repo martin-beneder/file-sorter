@@ -12,6 +12,18 @@ const nextConfig = {
             pathname: '/**',
         }]
     },
+    experimental: {
+        // Enable new React compiler optimizations
+        typedRoutes: true,
+        // Optimize bundle size and performance
+        optimizePackageImports: [
+            'lucide-react',
+            'react-icons'
+        ],
+    },
+    // Turbo settings (moved from experimental)
+    turbopack: {}
+
 }
 
 module.exports = nextConfig

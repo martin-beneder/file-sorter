@@ -1,7 +1,7 @@
 import { SignIn } from "@clerk/nextjs";
 import * as context from "next/headers";
 import { redirect } from "next/navigation";
-import Form from "../../components/form";
+import Form from "../components/form";
 import Link from "next/link";
 import Image from "next/image";
 

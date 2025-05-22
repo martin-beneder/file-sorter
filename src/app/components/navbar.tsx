@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
-import { currentUser } from '@clerk/nextjs';
+import { currentUser } from '@clerk/nextjs/server';
 
 export default async function NavBar() {
   const user = await currentUser();
@@ -34,14 +34,14 @@ export default async function NavBar() {
         <div className="items-stretch self-center flex  lg:flex gap-3.5 my-auto ">
           {session ? (
             <>
-              <Link href="/pricing" className="text-gray-400 text-center text-sm font-normal  whitespace-nowrap items-stretch bg-slate-100 grow justify-center px-1 py-1 rounded-md broder border-gray-400 border-dashed border-2">
+              <Link href="/login" className="text-gray-400 text-center text-sm font-normal  whitespace-nowrap items-stretch bg-slate-100 grow justify-center px-1 py-1 rounded-md broder border-gray-400 border-dashed border-2">
                 {user.unsafeMetadata.subscription as string}
               </Link>
               <UserButton afterSignOutUrl="/" />
             </>
           ) : (
             <>
-              <Link href="/login" className=" hidden sm:block text-blue-400 text-center text-sm font-medium leading-5 whitespace-nowrap items-stretch bg-slate-100 grow justify-center px-5 py-2.5 rounded-md">
+              <Link href={"/login"} className=" hidden sm:block text-blue-400 text-center text-sm font-medium leading-5 whitespace-nowrap items-stretch bg-slate-100 grow justify-center px-5 py-2.5 rounded-md">
                 Login
               </Link>
               <Link href="/signup" className="text-white text-center text-sm font-medium leading-5 whitespace-nowrap items-stretch bg-blue-400 grow justify-center px-5 py-2.5 rounded-md">

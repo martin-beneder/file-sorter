@@ -7,7 +7,7 @@ import {
   Trash2Icon,
   UploadCloudIcon,
 } from 'lucide-react';
-import * as React from 'react';
+import { forwardRef, useState, useMemo } from 'react';
 import { useDropzone, type DropzoneOptions } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
 
@@ -50,12 +50,12 @@ const ERROR_MESSAGES = {
   },
 };
 
-const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
+const MultiFileDropzone = forwardRef<HTMLInputElement, InputProps>(
   (
     { dropzoneOptions, value, className, disabled, onFilesAdded, onChange },
     ref,
   ) => {
-    const [customError, setCustomError] = React.useState<string>();
+    const [customError, setCustomError] = useState<string>();
     if (dropzoneOptions?.maxFiles && value?.length) {
       disabled = disabled ?? value.length >= dropzoneOptions.maxFiles;
     }
@@ -97,7 +97,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
     });
 
     // styling
-    const dropZoneClassName = React.useMemo(
+    const dropZoneClassName = useMemo(
       () =>
         twMerge(
           variants.base,
@@ -118,7 +118,7 @@ const MultiFileDropzone = React.forwardRef<HTMLInputElement, InputProps>(
     );
 
     // error validation messages
-    const errorMessage = React.useMemo(() => {
+    const errorMessage = useMemo(() => {
       if (fileRejections[0]) {
         const { errors } = fileRejections[0];
         if (errors[0]?.code === 'file-too-large') {

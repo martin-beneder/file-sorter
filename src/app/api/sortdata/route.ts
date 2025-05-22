@@ -1,7 +1,8 @@
 
 import { subscriptionmodel } from '@/app/lib/util';
-import { clerkClient, getAuth } from '@clerk/nextjs/server';
-import { NextRequest } from 'next/server';
+import { currentUser, getAuth } from '@clerk/nextjs/server';
+import { clerkClient } from '@clerk/nextjs/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { env } from 'process';
 
 function sleep(ms: number) {
@@ -10,32 +11,39 @@ function sleep(ms: number) {
 
 export async function POST(req: NextRequest) {
 
-    const { userId } = getAuth(req);
+    const { userId } = await getAuth(req);
     if (!userId) {
-        return Response.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const user = await clerkClient.users.getUser(userId);
+    const user = await currentUser();
+    if (!user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     console.log("user:", user.unsafeMetadata);
-    if (!((await clerkClient.users.getUser(userId)).unsafeMetadata.lastsort === null)) {
-
-        if (new Date(String((await clerkClient.users.getUser(userId)).unsafeMetadata.lastsort)) >= (new Date().setMinutes(new Date().getMinutes() - 0.1) as unknown as Date)) {
-            return Response.json({ error: "You are not allowed to sort files yet" }, { status: 400 });
+    if (!(user?.unsafeMetadata?.lastsort === null)) {
+        const lastSortTime = new Date(String(user?.unsafeMetadata?.lastsort));
+        const cooldownTime = new Date();
+        cooldownTime.setSeconds(cooldownTime.getSeconds() - 6); // 6 second cooldown
+        
+        if (lastSortTime >= cooldownTime) {
+            return NextResponse.json({ error: "You are not allowed to sort files yet" }, { status: 400 });
         }
-
     }
+
 
 
     const body = await req.json();
 
-
-    await clerkClient.users.updateUser(userId, {
+    
+    await (await clerkClient()).users.updateUser(userId, {
         unsafeMetadata: {
             ...user?.unsafeMetadata,
             lastsort: new Date()
         }
     });
 
+    console.log("user: 1231313231", body);
 
 
 
@@ -47,16 +55,24 @@ export async function POST(req: NextRequest) {
     let sortedFiles;
 
     for (let i = 0; i <= 3; i++) {
-
-        sortedFiles = await fetch(env.SORTAI_API_URL as string + "sortv2/", {
-            headers: {
-                'access_token': env.SORTAI_API_KEY as string,
-            },
-            method: 'POST',
-            body: filesFormData,
-        });
-        if (sortedFiles.ok) {
-            break;
+        console.log(i);
+        try {
+            const apiUrl = (env.SORTAI_API_URL as string).trim();
+            const fullUrl = (apiUrl.startsWith('http') ? apiUrl : `http://${apiUrl}`).replace(/\/?$/, "/") + "sortv2/";
+            sortedFiles = await fetch(fullUrl, {
+                headers: {
+                    'access_token': env.SORTAI_API_KEY as string,
+                },
+                method: 'POST',
+                body: filesFormData,
+            });
+            console.log("sortedFiles", sortedFiles);
+            if (sortedFiles.ok) {
+                break;
+            }
+        } catch (error) {
+            console.error("Fetch error:", error);
+            await sleep(1000); // wait a second before retrying
         }
     }
     if (!sortedFiles) {
@@ -70,6 +86,6 @@ export async function POST(req: NextRequest) {
     const sortFilesRepsons = await sortedFiles.json();
 
 
-    return Response.json(sortFilesRepsons, { status: 200 });
+    return NextResponse.json(sortFilesRepsons, { status: 200 });
 
 }

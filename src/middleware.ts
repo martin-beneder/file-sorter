@@ -1,10 +1,32 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
  
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
-export default authMiddleware({
-  publicRoutes: ["/", "/login", "/sign-up", "/forgot-password", "/reset-password", "/verify-email", "/api/edgestore/(.*)", "/get-token"],
+// Create a matcher for public routes that don't require authentication
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/login(.*)', 
+  '/sign-up(.*)', 
+  '/forgot-password(.*)', 
+  '/reset-password(.*)', 
+  '/verify-email(.*)', 
+  '/api/edgestore/(.*)', 
+  '/get-token(.*)',
+  '/pricing(.*)'
+]);
+
+// Create a matcher for routes to ignore completely
+const isIgnoredRoute = createRouteMatcher(['/api/webhooks(.*)']);
+
+// This middleware protects routes including api routes
+// Configures routes that can be accessed without authentication
+export default clerkMiddleware(async (auth, req) => {
+  // Skip ignored routes completely
+  if (isIgnoredRoute(req)) return;
+  
+  // Public routes don't need authentication
+  if (!isPublicRoute(req)) {
+    // Protect all other routes
+    await auth.protect();
+  }
 });
  
 export const config = {

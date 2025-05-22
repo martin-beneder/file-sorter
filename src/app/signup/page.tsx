@@ -1,6 +1,6 @@
 
 
-import React from "react";
+// Server Component - No React import needed
 import Image from "next/image";
 import { SignUp as SignUpClerk } from "@clerk/nextjs";
 

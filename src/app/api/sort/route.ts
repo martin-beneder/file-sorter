@@ -1,8 +1,9 @@
-
 import { subscriptionmodel } from '@/app/lib/util';
-import { clerkClient, getAuth } from '@clerk/nextjs/server';
-import { NextRequest } from 'next/server';
+import { getAuth } from '@clerk/nextjs/server';
+import { clerkClient } from '@clerk/nextjs/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { env } from 'process';
+import { currentUser } from '@clerk/nextjs/server';
 
 function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -28,25 +29,40 @@ async function convertLinkToFormData(formData: FormData, url: string, fieldName:
 }
 
 export async function POST(req: NextRequest) {
-    const { userId } = getAuth(req);
+    const { userId } = await getAuth(req);
+
     if (!userId) {
-        return Response.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const user = await clerkClient.users.getUser(userId);
+
+    const user = await currentUser();
+        if (!user) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+    
+
+    await (await clerkClient()).users.updateUser(userId, {
+        unsafeMetadata: {
+            ...user?.unsafeMetadata,
+            lastsort: new Date()
+        }
+    });;
     const body = await req.json();
     if (JSON.stringify(body).length < (subscriptionmodel(user?.unsafeMetadata?.subscriptionid as number)?.maxfiles || 0)) {
-        return Response.json({ error: "File limit exceeded" }, { status: 400 });
+        return NextResponse.json({ error: "File limit exceeded" }, { status: 400 });
     }
 
-    if (!((await clerkClient.users.getUser(userId)).unsafeMetadata.lastfileupload === null)) {
-
-        if (new Date(String((await clerkClient.users.getUser(userId)).unsafeMetadata.lastfileupload)) >= (new Date().setMinutes(new Date().getMinutes() - 0.5) as unknown as Date)) {
-            return Response.json({ error: "You are not allowed to upload files yet" }, { status: 400 });
+    if (!(user?.unsafeMetadata?.lastfileupload === null)) {
+        const lastUploadTime = new Date(String(user?.unsafeMetadata?.lastfileupload));
+        const cooldownTime = new Date();
+        cooldownTime.setSeconds(cooldownTime.getSeconds() - 30); // 30 second cooldown
+        
+        if (lastUploadTime >= cooldownTime) {
+            return NextResponse.json({ error: "You are not allowed to upload files yet" }, { status: 400 });
         }
-
     }
 
-
+    console.log("file:", body);
 
 
 
@@ -54,9 +70,8 @@ export async function POST(req: NextRequest) {
     filesFormData.append('filejson', JSON.stringify(body));
 
     let response;
-
     for (let i = 0; i <= 3; i++) {
-        console.log(i)
+        console.log(i);
         response = await fetch(env.SORTAI_API_URL as string + "uploadfilev2/", {
             headers: {
                 'access_token': env.SORTAI_API_KEY as string,
@@ -77,14 +92,14 @@ export async function POST(req: NextRequest) {
     const reponstext = await response.json();
     console.log("reponstext:", reponstext);
 
-    await clerkClient.users.updateUser(userId, {
+    await (await clerkClient()).users.updateUser(userId, {
         unsafeMetadata: {
             ...user?.unsafeMetadata,
-            lastfileupload: new Date()
+            lastsort: new Date()
         }
-    });
+    });;
 
-    return Response.json(reponstext, { status: 200 });
+    return NextResponse.json(reponstext, { status: 200 });
 
 
 }
