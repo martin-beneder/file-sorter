@@ -9,7 +9,6 @@ function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-
 async function convertLinkToFormData(formData: FormData, url: string, fieldName: string, filename: string): Promise<FormData> {
     const response = await fetch(url);
     if (!response.ok) {
@@ -17,7 +16,6 @@ async function convertLinkToFormData(formData: FormData, url: string, fieldName:
     }
 
     const arrayBuffer = await response.arrayBuffer();
-
 
     // In browsers, you can directly use Blob for file data in FormData
     const blob = new Blob([arrayBuffer], { type: response.headers.get("content-type")! });
@@ -29,77 +27,153 @@ async function convertLinkToFormData(formData: FormData, url: string, fieldName:
 }
 
 export async function POST(req: NextRequest) {
-    const { userId } = await getAuth(req);
+    let body;
+    let user;
+    let userId;
 
-    if (!userId) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    try {
+        // Get authentication info using getAuth
+        const auth = await getAuth(req);
+        userId = auth.userId;
 
-    const user = await currentUser();
+        // Check if user is authenticated
+        if (!userId) {
+            return NextResponse.json({ 
+                error: "Authentication failed", 
+                message: "You must be logged in to use this feature" 
+            }, { status: 401 });
+        }
+
+        // Get user details with currentUser
+        user = await currentUser();
         if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+            return NextResponse.json({ 
+                error: "User not found", 
+                message: "Unable to retrieve user information" 
+            }, { status: 401 });
         }
-    
 
-    await (await clerkClient()).users.updateUser(userId, {
-        unsafeMetadata: {
-            ...user?.unsafeMetadata,
-            lastsort: new Date()
+        // Update user metadata to track sort operation
+        try {
+            await (await clerkClient()).users.updateUser(userId, {
+                unsafeMetadata: {
+                    ...user.unsafeMetadata,
+                    lastsort: new Date()
+                }
+            });
+        } catch (error) {
+            console.error("Error updating user metadata:", error);
+            // Continue execution even if metadata update fails
         }
-    });;
-    const body = await req.json();
-    if (JSON.stringify(body).length < (subscriptionmodel(user?.unsafeMetadata?.subscriptionid as number)?.maxfiles || 0)) {
-        return NextResponse.json({ error: "File limit exceeded" }, { status: 400 });
-    }
 
-    if (!(user?.unsafeMetadata?.lastfileupload === null)) {
-        const lastUploadTime = new Date(String(user?.unsafeMetadata?.lastfileupload));
-        const cooldownTime = new Date();
-        cooldownTime.setSeconds(cooldownTime.getSeconds() - 30); // 30 second cooldown
+        // Parse request body
+        try {
+            body = await req.json();
+        } catch (error) {
+            return NextResponse.json({ 
+                error: "Invalid request", 
+                message: "The request body could not be parsed" 
+            }, { status: 400 });
+        }
+
+        // Check subscription limits
+        const subscriptionId = user.unsafeMetadata?.subscriptionid as number;
+        const maxFiles = subscriptionmodel(subscriptionId)?.maxfiles || 0;
         
-        if (lastUploadTime >= cooldownTime) {
-            return NextResponse.json({ error: "You are not allowed to upload files yet" }, { status: 400 });
+        // Check if the number of files exceeds the subscription limit
+        if (Array.isArray(body) && body.length > maxFiles) {
+            return NextResponse.json({ 
+                error: "Subscription limit exceeded", 
+                message: `Dein Abonnement erlaubt maximal ${maxFiles} Dateien. Du hast ${body.length} Dateien hochgeladen.` 
+            }, { status: 403 });
         }
-    }
-
-    console.log("file:", body);
-
-
-
-    const filesFormData = new FormData();
-    filesFormData.append('filejson', JSON.stringify(body));
-
-    let response;
-    for (let i = 0; i <= 3; i++) {
-        console.log(i);
-        response = await fetch(env.SORTAI_API_URL as string + "uploadfilev2/", {
-            headers: {
-                'access_token': env.SORTAI_API_KEY as string,
-            },
-            method: 'POST',
-            body: filesFormData,
-        });
-
-        if (response.ok) {
-            break;
+        
+        // Also check if the user has a valid subscription
+        if (maxFiles === 0) {
+            return NextResponse.json({ 
+                error: "Invalid subscription", 
+                message: "Du hast kein aktives Abonnement. Bitte wähle ein Abonnement aus." 
+            }, { status: 403 });
         }
-    }
-    if (!response?.ok) {
-        throw new Error(`Failed to upload file to SortAI API. Status code: 500`);
-    }
 
-
-    const reponstext = await response.json();
-    console.log("reponstext:", reponstext);
-
-    await (await clerkClient()).users.updateUser(userId, {
-        unsafeMetadata: {
-            ...user?.unsafeMetadata,
-            lastsort: new Date()
+        // Check rate limiting
+        if (user.unsafeMetadata?.lastfileupload) {
+            const lastUploadTime = new Date(String(user.unsafeMetadata.lastfileupload));
+            const cooldownTime = new Date();
+            cooldownTime.setSeconds(cooldownTime.getSeconds() - 30); // 30 second cooldown
+            
+            if (lastUploadTime >= cooldownTime) {
+                return NextResponse.json({ 
+                    error: "Rate limit exceeded", 
+                    message: "Please wait at least 30 seconds between uploads" 
+                }, { status: 429 });
+            }
         }
-    });;
 
-    return NextResponse.json(reponstext, { status: 200 });
+        console.log("file:", body);
 
+        // Prepare form data for API call
+        const filesFormData = new FormData();
+        filesFormData.append('filejson', JSON.stringify(body));
 
+        // Attempt API call with retries
+        let response;
+        let apiError = null;
+
+        for (let i = 0; i <= 3; i++) {
+            try {
+                response = await fetch(env.SORTAI_API_URL as string + "uploadfilev2/", {
+                    headers: {
+                        'access_token': env.SORTAI_API_KEY as string,
+                    },
+                    method: 'POST',
+                    body: filesFormData,
+                });
+
+                if (response.ok) {
+                    break;
+                }
+                
+                // Wait before retry
+                await sleep(1000);
+            } catch (error) {
+                apiError = error;
+                console.error(`API call attempt ${i} failed:`, error);
+            }
+        }
+
+        // Handle API failure
+        if (!response?.ok) {
+            return NextResponse.json({ 
+                error: "External API error", 
+                message: "Could not process files with the sorting API" 
+            }, { status: 502 });
+        }
+
+        // Process successful response
+        const responseData = await response.json();
+        console.log("responseData:", responseData);
+
+        // Update user metadata after successful operation
+        try {
+            await (await clerkClient()).users.updateUser(userId, {
+                unsafeMetadata: {
+                    ...user.unsafeMetadata,
+                    lastsort: new Date()
+                }
+            });
+        } catch (error) {
+            console.error("Error updating user metadata after sort:", error);
+            // Continue since the operation was successful
+        }
+
+        return NextResponse.json(responseData, { status: 200 });
+
+    } catch (error) {
+        console.error("Unhandled error in sort API:", error);
+        return NextResponse.json({ 
+            error: "Server error", 
+            message: "An unexpected error occurred while processing your request" 
+        }, { status: 500 });
+    }
 }

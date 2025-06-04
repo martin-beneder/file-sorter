@@ -1,4 +1,6 @@
 import Image from "next/image"
+import Link from "next/link"
+import { Route } from "next"
 
 
 export default function Home() {
@@ -17,9 +19,9 @@ export default function Home() {
                   Könnte Ihr Arbeitsalltag einfacher sein, wenn Ihre Dateien
                   sich selbst organisieren würden?
                 </div>
-                <div className="text-white text-center text-base font-medium leading-6 whitespace-nowrap justify-center items-stretch rounded bg-blue-400 mt-8 px-8 py-3.5 max-md:px-5">
+                <Link href="/signup/sign-up" className="text-white text-center text-base font-medium leading-6 whitespace-nowrap justify-center items-stretch rounded bg-blue-400 mt-8 px-8 py-3.5 max-md:px-5 inline-block" aria-label="Register">
                   Register
-                </div>
+                </Link>
               </div>
             </div>
             <div className="flex flex-col items-stretch w-[37%] ml-5 max-md:w-full max-md:ml-0">
